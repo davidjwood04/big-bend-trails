@@ -8,7 +8,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital@0;1&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
   --night: #0a0c14;
   --dusk: #1a1f35;
@@ -20,9 +19,7 @@
   --mist: rgba(255,248,231,0.07);
   --glow: rgba(232,192,122,0.15);
 }
-
 html { scroll-behavior: smooth; }
-
 body {
   background: var(--night);
   color: var(--star);
@@ -33,23 +30,17 @@ body {
 
 /* Custom cursor */
 .cursor {
-  position: fixed;
-  width: 8px; height: 8px;
-  background: var(--sand);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
+  position: fixed; width: 8px; height: 8px;
+  background: var(--sand); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
   transform: translate(-50%,-50%);
   transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
   mix-blend-mode: screen;
 }
 .cursor-ring {
-  position: fixed;
-  width: 32px; height: 32px;
-  border: 1px solid rgba(232,192,122,0.4);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
+  position: fixed; width: 32px; height: 32px;
+  border: 1px solid rgba(232,192,122,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
   transform: translate(-50%,-50%);
   transition: transform 0.18s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
 }
@@ -57,39 +48,65 @@ body:hover .cursor { opacity: 1; }
 
 /* Stars canvas */
 #stars-canvas {
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  z-index: 0;
-  pointer-events: none;
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+
+/* ── NAV ── */
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 56px;
+  background: rgba(10,12,20,0.82);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.nav-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem; font-weight: 700;
+  color: var(--sand); letter-spacing: -0.01em;
+}
+.nav-links {
+  display: flex; align-items: center; gap: 0; list-style: none;
+}
+.nav-links li a {
+  display: block; padding: 0 1rem;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: rgba(255,248,231,0.45); text-decoration: none;
+  transition: color 0.2s;
+  border-right: 1px solid rgba(232,192,122,0.08);
+}
+.nav-links li:last-child a { border-right: none; }
+.nav-links li a:hover { color: var(--sand); }
+.nav-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px;
+  border: 1px solid rgba(232,192,122,0.25);
+  color: rgba(232,192,122,0.6);
+}
+@media (max-width: 580px) {
+  .nav-badge { display: none; }
+  .nav-links li a { padding: 0 0.6rem; }
 }
 
 /* Hero */
 .hero {
-  position: relative;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
-  padding: 2rem;
-  overflow: hidden;
+  position: relative; min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 1; padding: 7rem 2rem 2rem; overflow: hidden;
 }
 
 /* SVG landscape */
 .landscape {
-  position: absolute;
-  bottom: 0; left: 0;
-  width: 100%;
-  z-index: 2;
-  pointer-events: none;
+  position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2; pointer-events: none;
 }
 
 /* Milky way glow */
 .milky-way {
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
   background:
     radial-gradient(ellipse 80% 40% at 60% 20%, rgba(120,140,200,0.08) 0%, transparent 70%),
     radial-gradient(ellipse 40% 60% at 30% 30%, rgba(100,120,180,0.06) 0%, transparent 60%);
@@ -98,320 +115,156 @@ body:hover .cursor { opacity: 1; }
 
 /* Moon */
 .moon {
-  position: absolute;
-  top: 12%; right: 18%;
-  width: 70px; height: 70px;
-  border-radius: 50%;
+  position: absolute; top: 12%; right: 18%;
+  width: 70px; height: 70px; border-radius: 50%;
   background: radial-gradient(circle at 38% 38%, #FFF8E7 0%, #E8C07A 50%, #C49A40 100%);
   box-shadow: 0 0 40px 12px rgba(232,192,122,0.25), 0 0 100px 40px rgba(232,192,122,0.08);
-  z-index: 1;
-  animation: moonpulse 6s ease-in-out infinite;
+  z-index: 1; animation: moonpulse 6s ease-in-out infinite;
 }
 @keyframes moonpulse {
   0%,100% { box-shadow: 0 0 40px 12px rgba(232,192,122,0.25), 0 0 100px 40px rgba(232,192,122,0.08); }
-  50%      { box-shadow: 0 0 55px 18px rgba(232,192,122,0.35), 0 0 130px 55px rgba(232,192,122,0.12); }
+  50% { box-shadow: 0 0 55px 18px rgba(232,192,122,0.35), 0 0 130px 55px rgba(232,192,122,0.12); }
 }
 
 /* Hero text */
 .hero-eyebrow {
-  font-family: 'DM Mono', monospace;
-  font-size: 11px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--sand);
-  opacity: 0.7;
-  margin-bottom: 1.25rem;
-  z-index: 3;
-  animation: fadein 1.2s ease both;
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.7; margin-bottom: 1.25rem;
+  z-index: 3; animation: fadein 1.2s ease both;
 }
-
 .hero-title {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(3rem, 8vw, 7rem);
-  font-weight: 700;
-  line-height: 0.92;
-  text-align: center;
-  z-index: 3;
-  letter-spacing: -0.02em;
-  color: var(--star);
+  font-size: clamp(3rem, 8vw, 7rem); font-weight: 700;
+  line-height: 0.92; text-align: center; z-index: 3;
+  letter-spacing: -0.02em; color: var(--star);
   text-shadow: 0 0 60px rgba(232,192,122,0.2);
   animation: fadein 1.4s ease both;
 }
-
-.hero-title em {
-  font-style: italic;
-  color: var(--sand);
-  display: block;
-}
-
+.hero-title em { font-style: italic; color: var(--sand); display: block; }
 .hero-subtitle {
-  font-size: 15px;
-  color: rgba(255,248,231,0.55);
-  text-align: center;
-  margin-top: 1.5rem;
-  max-width: 440px;
-  line-height: 1.75;
-  z-index: 3;
+  font-size: 15px; color: rgba(255,248,231,0.55); text-align: center;
+  margin-top: 1.5rem; max-width: 440px; line-height: 1.75; z-index: 3;
   animation: fadein 1.6s ease both;
 }
-
-.hero-cta {
-  margin-top: 2.5rem;
-  z-index: 3;
-  animation: fadein 1.8s ease both;
-}
-
+.hero-cta { margin-top: 2.5rem; z-index: 3; animation: fadein 1.8s ease both; }
 .scroll-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: rgba(255,248,231,0.35);
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  cursor: default;
-  animation: bounce 2.5s ease-in-out infinite;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  color: rgba(255,248,231,0.35); font-family: 'DM Mono', monospace;
+  font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+  cursor: default; animation: bounce 2.5s ease-in-out infinite;
 }
 .scroll-hint svg { opacity: 0.4; }
 @keyframes bounce {
   0%,100% { transform: translateY(0); }
-  50%      { transform: translateY(6px); }
+  50% { transform: translateY(6px); }
 }
 @keyframes fadein {
   from { opacity: 0; transform: translateY(16px); }
-  to   { opacity: 1; transform: translateY(0); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Badge / tag */
 .badge {
-  display: inline-block;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 20px;
-  border: 1px solid currentColor;
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 20px; border: 1px solid currentColor;
 }
-.badge.mod  { color: #EF9F27; }
-.badge.str  { color: #E24B4A; }
+.badge.mod { color: #EF9F27; }
+.badge.str { color: #E24B4A; }
 
 /* Trails section */
 .trails-section {
-  position: relative;
-  z-index: 10;
-  padding: 5rem 1.5rem 6rem;
-  max-width: 980px;
-  margin: 0 auto;
+  position: relative; z-index: 10;
+  padding: 5rem 1.5rem 6rem; max-width: 980px; margin: 0 auto;
 }
-
 .section-rule {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 3rem;
+  display: flex; align-items: center; gap: 1rem; margin-bottom: 3rem;
 }
 .section-rule::before, .section-rule::after {
-  content: '';
-  flex: 1;
-  height: 1px;
+  content: ''; flex: 1; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(232,192,122,0.3), transparent);
 }
 .section-rule-text {
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.25em;
-  text-transform: uppercase;
-  color: var(--sand);
-  opacity: 0.6;
-  white-space: nowrap;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.6; white-space: nowrap;
 }
 
 /* Trail cards */
-.trail-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
+.trail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
 .trail-card {
-  position: relative;
-  display: block;
-  text-decoration: none;
-  color: inherit;
-  border: 1px solid rgba(232,192,122,0.12);
-  border-radius: 4px;
-  overflow: hidden;
+  position: relative; display: block; text-decoration: none; color: inherit;
+  border: 1px solid rgba(232,192,122,0.12); border-radius: 4px; overflow: hidden;
   background: rgba(255,248,231,0.02);
-  transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s;
-  cursor: none;
+  transition: border-color 0.35s, transform 0.35s, box-shadow 0.35s; cursor: none;
 }
-
 .trail-card:hover {
-  border-color: rgba(232,192,122,0.35);
-  transform: translateY(-4px);
+  border-color: rgba(232,192,122,0.35); transform: translateY(-4px);
   box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(232,192,122,0.08);
 }
-
-.trail-card-illustration {
-  width: 100%;
-  height: 220px;
-  display: block;
-  position: relative;
-  overflow: hidden;
-}
-
-.trail-card-illustration svg {
-  width: 100%;
-  height: 100%;
-}
-
+.trail-card-illustration { width: 100%; height: 220px; display: block; position: relative; overflow: hidden; }
+.trail-card-illustration svg { width: 100%; height: 100%; }
 .trail-card-overlay {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 60%;
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60%;
   background: linear-gradient(to top, rgba(10,12,20,0.95) 0%, transparent 100%);
 }
-
-.trail-card-body {
-  padding: 1.5rem 1.75rem 1.75rem;
-}
-
-.trail-card-tags {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
-}
-
+.trail-card-body { padding: 1.5rem 1.75rem 1.75rem; }
+.trail-card-tags { display: flex; gap: 8px; margin-bottom: 1rem; }
 .trail-card-name {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.1;
-  margin-bottom: 0.5rem;
-  color: var(--star);
+  font-family: 'Playfair Display', Georgia, serif; font-size: 1.75rem;
+  font-weight: 700; line-height: 1.1; margin-bottom: 0.5rem; color: var(--star);
   transition: color 0.2s;
 }
 .trail-card:hover .trail-card-name { color: var(--sand); }
-
 .trail-card-tagline {
-  font-size: 13px;
-  font-style: italic;
-  color: rgba(255,248,231,0.45);
-  line-height: 1.6;
-  margin-bottom: 1.25rem;
+  font-size: 13px; font-style: italic; color: rgba(255,248,231,0.45);
+  line-height: 1.6; margin-bottom: 1.25rem;
 }
-
 .trail-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  border: 1px solid rgba(232,192,122,0.1);
-  border-radius: 3px;
-  overflow: hidden;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;
+  border: 1px solid rgba(232,192,122,0.1); border-radius: 3px; overflow: hidden;
 }
-
-.trail-stat {
-  padding: 10px 12px;
-  border-right: 1px solid rgba(232,192,122,0.1);
-  text-align: center;
-}
+.trail-stat { padding: 10px 12px; border-right: 1px solid rgba(232,192,122,0.1); text-align: center; }
 .trail-stat:last-child { border-right: none; }
-
-.trail-stat-val {
-  font-family: 'DM Mono', monospace;
-  font-size: 14px;
-  color: var(--sand);
-  display: block;
-  margin-bottom: 2px;
-}
-.trail-stat-label {
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255,248,231,0.3);
-}
-
+.trail-stat-val { font-family: 'DM Mono', monospace; font-size: 14px; color: var(--sand); display: block; margin-bottom: 2px; }
+.trail-stat-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,248,231,0.3); }
 .trail-card-arrow {
-  position: absolute;
-  top: 1.5rem; right: 1.5rem;
-  width: 32px; height: 32px;
-  border: 1px solid rgba(232,192,122,0.2);
-  border-radius: 50%;
+  position: absolute; top: 1.5rem; right: 1.5rem; width: 32px; height: 32px;
+  border: 1px solid rgba(232,192,122,0.2); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   transition: background 0.25s, border-color 0.25s, transform 0.25s;
 }
 .trail-card:hover .trail-card-arrow {
-  background: rgba(232,192,122,0.12);
-  border-color: rgba(232,192,122,0.5);
-  transform: translate(2px, -2px);
+  background: rgba(232,192,122,0.12); border-color: rgba(232,192,122,0.5); transform: translate(2px,-2px);
 }
 
 /* Coming soon card */
-.trail-card.coming-soon {
-  opacity: 0.45;
-  pointer-events: none;
-  cursor: default;
-}
+.trail-card.coming-soon { opacity: 0.45; pointer-events: none; cursor: default; }
 .coming-soon-label {
-  position: absolute;
-  top: 1rem; left: 1rem;
-  font-family: 'DM Mono', monospace;
-  font-size: 9px;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--sand);
-  background: rgba(10,12,20,0.8);
-  padding: 4px 10px;
-  border: 1px solid rgba(232,192,122,0.25);
-  border-radius: 20px;
+  position: absolute; top: 1rem; left: 1rem;
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--sand); background: rgba(10,12,20,0.8); padding: 4px 10px;
+  border: 1px solid rgba(232,192,122,0.25); border-radius: 20px;
 }
 
 /* About strip */
 .about-strip {
-  position: relative;
-  z-index: 10;
-  border-top: 1px solid rgba(232,192,122,0.08);
-  padding: 3rem 1.5rem;
-  max-width: 980px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2rem;
+  position: relative; z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08); padding: 3rem 1.5rem;
+  max-width: 980px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;
 }
-
-.about-item-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.75rem;
-  display: block;
-}
-.about-item-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  color: var(--sand);
-}
-.about-item-text {
-  font-size: 12px;
-  color: rgba(255,248,231,0.4);
-  line-height: 1.75;
-}
+.about-item-icon { font-size: 1.5rem; margin-bottom: 0.75rem; display: block; }
+.about-item-title { font-family: 'Playfair Display', serif; font-size: 1rem; margin-bottom: 0.5rem; color: var(--sand); }
+.about-item-text { font-size: 12px; color: rgba(255,248,231,0.4); line-height: 1.75; }
 
 /* Footer */
 footer {
-  position: relative;
-  z-index: 10;
-  border-top: 1px solid rgba(232,192,122,0.08);
-  padding: 2rem 1.5rem;
-  text-align: center;
-  font-family: 'DM Mono', monospace;
-  font-size: 10px;
-  letter-spacing: 0.12em;
-  color: rgba(255,248,231,0.2);
-  text-transform: uppercase;
+  position: relative; z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08); padding: 2rem 1.5rem; text-align: center;
+  font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em;
+  color: rgba(255,248,231,0.2); text-transform: uppercase;
 }
 
 @media (max-width: 680px) {
@@ -425,24 +278,29 @@ footer {
 
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
-
 <canvas id="stars-canvas"></canvas>
+
+<!-- ── NAV ── -->
+<nav class="site-nav">
+  <span class="nav-brand">Big Bend Trail Guide</span>
+  <ul class="nav-links">
+    <li><a href="./lost-mine/">Lost Mine</a></li>
+    <li><a href="./emory-peak/">Emory Peak</a></li>
+  </ul>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
+</nav>
 
 <section class="hero">
   <div class="milky-way"></div>
   <div class="moon"></div>
-
   <p class="hero-eyebrow">Pack 171 · Scout Troop Field Guide · Oct 2025</p>
-
   <h1 class="hero-title">
     Big Bend<br>
     <em>Trail Guide</em>
   </h1>
-
   <p class="hero-subtitle">
     Where the Chisos mountains meet the Rio Grande and the darkest skies in America swallow you whole.
   </p>
-
   <div class="hero-cta">
     <div class="scroll-hint">
       <span>Explore the trails</span>
@@ -454,65 +312,22 @@ footer {
 
   <!-- Desert landscape SVG -->
   <svg class="landscape" viewBox="0 0 1440 320" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <!-- Distant mountains -->
     <path d="M0 220 L120 140 L200 180 L310 100 L400 155 L520 90 L620 145 L720 110 L820 160 L920 95 L1020 150 L1120 115 L1220 145 L1320 105 L1440 135 L1440 320 L0 320Z" fill="#0f1320"/>
-    <!-- Mid mesa -->
     <path d="M0 260 L80 230 L160 245 L250 215 L350 240 L440 225 L540 250 L640 218 L740 242 L840 220 L940 248 L1040 228 L1140 252 L1240 235 L1340 255 L1440 240 L1440 320 L0 320Z" fill="#13192e"/>
-    <!-- Canyon walls -->
     <path d="M0 280 L60 265 L120 275 L200 258 L300 272 L380 260 L460 278 L560 262 L660 280 L760 268 L860 282 L960 265 L1060 275 L1160 263 L1260 278 L1360 268 L1440 275 L1440 320 L0 320Z" fill="#1a1f35"/>
-    <!-- Foreground -->
     <path d="M0 295 L1440 295 L1440 320 L0 320Z" fill="#0d1018"/>
-    <!-- Saguaro cacti silhouettes -->
     <g fill="#0d1018">
-      <!-- cactus 1 -->
-      <rect x="95" y="255" width="5" height="40"/>
-      <rect x="85" y="265" width="15" height="4"/>
-      <rect x="83" y="265" width="4" height="18"/>
-      <rect x="99" y="268" width="14" height="4"/>
-      <rect x="109" y="268" width="4" height="15"/>
-      <!-- cactus 2 -->
-      <rect x="310" y="248" width="6" height="47"/>
-      <rect x="298" y="260" width="18" height="5"/>
-      <rect x="296" y="258" width="5" height="20"/>
-      <rect x="314" y="263" width="16" height="5"/>
-      <rect x="325" y="260" width="5" height="18"/>
-      <!-- cactus 3 small -->
-      <rect x="490" y="268" width="4" height="27"/>
-      <rect x="483" y="275" width="11" height="3"/>
-      <rect x="481" y="274" width="3" height="13"/>
-      <!-- cactus 4 -->
-      <rect x="780" y="252" width="6" height="43"/>
-      <rect x="769" y="264" width="17" height="5"/>
-      <rect x="768" y="262" width="5" height="19"/>
-      <rect x="784" y="267" width="15" height="5"/>
-      <rect x="795" y="265" width="5" height="16"/>
-      <!-- cactus 5 small -->
-      <rect x="1100" y="265" width="4" height="30"/>
-      <rect x="1093" y="272" width="11" height="3"/>
-      <rect x="1091" y="271" width="3" height="14"/>
-      <rect x="1103" y="274" width="10" height="3"/>
-      <rect x="1109" y="273" width="3" height="12"/>
-      <!-- cactus 6 -->
-      <rect x="1320" y="257" width="5" height="38"/>
-      <rect x="1310" y="267" width="15" height="4"/>
-      <rect x="1308" y="266" width="4" height="16"/>
-      <rect x="1323" y="269" width="13" height="4"/>
-      <rect x="1332" y="268" width="4" height="14"/>
+      <rect x="95" y="255" width="5" height="40"/><rect x="85" y="265" width="15" height="4"/><rect x="83" y="265" width="4" height="18"/><rect x="99" y="268" width="14" height="4"/><rect x="109" y="268" width="4" height="15"/>
+      <rect x="310" y="248" width="6" height="47"/><rect x="298" y="260" width="18" height="5"/><rect x="296" y="258" width="5" height="20"/><rect x="314" y="263" width="16" height="5"/><rect x="325" y="260" width="5" height="18"/>
+      <rect x="490" y="268" width="4" height="27"/><rect x="483" y="275" width="11" height="3"/><rect x="481" y="274" width="3" height="13"/>
+      <rect x="780" y="252" width="6" height="43"/><rect x="769" y="264" width="17" height="5"/><rect x="768" y="262" width="5" height="19"/><rect x="784" y="267" width="15" height="5"/><rect x="795" y="265" width="5" height="16"/>
+      <rect x="1100" y="265" width="4" height="30"/><rect x="1093" y="272" width="11" height="3"/><rect x="1091" y="271" width="3" height="14"/><rect x="1103" y="274" width="10" height="3"/><rect x="1109" y="273" width="3" height="12"/>
+      <rect x="1320" y="257" width="5" height="38"/><rect x="1310" y="267" width="15" height="4"/><rect x="1308" y="266" width="4" height="16"/><rect x="1323" y="269" width="13" height="4"/><rect x="1332" y="268" width="4" height="14"/>
     </g>
-    <!-- Ocotillo -->
     <g stroke="#0d1018" stroke-width="1.5" fill="none">
-      <line x1="200" y1="295" x2="195" y2="262"/>
-      <line x1="200" y1="295" x2="204" y2="260"/>
-      <line x1="200" y1="295" x2="208" y2="268"/>
-      <line x1="200" y1="295" x2="193" y2="270"/>
-      <line x1="600" y1="295" x2="596" y2="265"/>
-      <line x1="600" y1="295" x2="603" y2="263"/>
-      <line x1="600" y1="295" x2="607" y2="270"/>
-      <line x1="600" y1="295" x2="594" y2="272"/>
-      <line x1="1200" y1="295" x2="1196" y2="267"/>
-      <line x1="1200" y1="295" x2="1203" y2="265"/>
-      <line x1="1200" y1="295" x2="1207" y2="272"/>
-      <line x1="1200" y1="295" x2="1194" y2="274"/>
+      <line x1="200" y1="295" x2="195" y2="262"/><line x1="200" y1="295" x2="204" y2="260"/><line x1="200" y1="295" x2="208" y2="268"/><line x1="200" y1="295" x2="193" y2="270"/>
+      <line x1="600" y1="295" x2="596" y2="265"/><line x1="600" y1="295" x2="603" y2="263"/><line x1="600" y1="295" x2="607" y2="270"/><line x1="600" y1="295" x2="594" y2="272"/>
+      <line x1="1200" y1="295" x2="1196" y2="267"/><line x1="1200" y1="295" x2="1203" y2="265"/><line x1="1200" y1="295" x2="1207" y2="272"/><line x1="1200" y1="295" x2="1194" y2="274"/>
     </g>
   </svg>
 </section>
@@ -522,7 +337,6 @@ footer {
   <div class="section-rule">
     <span class="section-rule-text">Choose your trail</span>
   </div>
-
   <div class="trail-grid">
 
     <!-- Lost Mine -->
@@ -530,17 +344,10 @@ footer {
       <div class="trail-card-illustration">
         <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0d1a2e"/>
-              <stop offset="100%" stop-color="#1e2d4a"/>
-            </linearGradient>
-            <linearGradient id="glow1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#E8C07A" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#C2572A" stop-opacity="0"/>
-            </linearGradient>
+            <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0d1a2e"/><stop offset="100%" stop-color="#1e2d4a"/></linearGradient>
+            <linearGradient id="glow1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8C07A" stop-opacity="0.6"/><stop offset="100%" stop-color="#C2572A" stop-opacity="0"/></linearGradient>
           </defs>
           <rect width="480" height="220" fill="url(#sky1)"/>
-          <!-- Stars -->
           <g fill="#FFF8E7" opacity="0.8">
             <circle cx="40" cy="20" r="0.8"/><circle cx="80" cy="35" r="1.2"/><circle cx="130" cy="15" r="0.7"/>
             <circle cx="170" cy="28" r="1"/><circle cx="210" cy="12" r="0.9"/><circle cx="260" cy="30" r="1.1"/>
@@ -548,46 +355,27 @@ footer {
             <circle cx="430" cy="10" r="1"/><circle cx="455" cy="40" r="0.7"/><circle cx="60" cy="55" r="0.8"/>
             <circle cx="150" cy="48" r="0.6"/><circle cx="320" cy="52" r="0.9"/><circle cx="420" cy="58" r="0.7"/>
           </g>
-          <!-- Sunrise glow behind mountains -->
           <ellipse cx="240" cy="130" rx="180" ry="60" fill="url(#glow1)" opacity="0.5"/>
-          <!-- Mountains -->
           <path d="M0 160 L60 100 L110 130 L180 70 L240 110 L300 80 L360 120 L420 90 L480 115 L480 220 L0 220Z" fill="#162238"/>
           <path d="M0 175 L80 145 L140 158 L210 135 L280 152 L350 138 L420 158 L480 145 L480 220 L0 220Z" fill="#1d3050"/>
-          <!-- Trail path winding up -->
           <path d="M80 210 Q120 190 140 175 Q165 158 175 148 Q185 138 200 135" stroke="rgba(232,192,122,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
-          <!-- Ridge highlight -->
           <path d="M160 70 L240 110 L300 80" stroke="rgba(232,192,122,0.2)" stroke-width="1" fill="none"/>
-          <!-- Foreground rocks -->
           <path d="M0 205 L30 195 L60 200 L100 192 L140 198 L200 190 L260 196 L320 188 L380 195 L440 190 L480 195 L480 220 L0 220Z" fill="#0e1a2a"/>
         </svg>
         <div class="trail-card-overlay"></div>
       </div>
       <div class="trail-card-body">
-        <div class="trail-card-tags">
-          <span class="badge mod">Moderate</span>
-          <span class="badge mod">Half Day</span>
-        </div>
+        <div class="trail-card-tags"><span class="badge mod">Moderate</span><span class="badge mod">Half Day</span></div>
         <h2 class="trail-card-name">Lost Mine<br>Trail</h2>
         <p class="trail-card-tagline">"Rangers call it their single favorite hike in the park — and they've done them all."</p>
         <div class="trail-stats">
-          <div class="trail-stat">
-            <span class="trail-stat-val">4.8 mi</span>
-            <span class="trail-stat-label">distance</span>
-          </div>
-          <div class="trail-stat">
-            <span class="trail-stat-val">1,100 ft</span>
-            <span class="trail-stat-label">gain</span>
-          </div>
-          <div class="trail-stat">
-            <span class="trail-stat-val">2.5–3 hr</span>
-            <span class="trail-stat-label">est. time</span>
-          </div>
+          <div class="trail-stat"><span class="trail-stat-val">4.8 mi</span><span class="trail-stat-label">distance</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">1,100 ft</span><span class="trail-stat-label">gain</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">2.5–3 hr</span><span class="trail-stat-label">est. time</span></div>
         </div>
       </div>
       <div class="trail-card-arrow">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
     </a>
 
@@ -596,18 +384,11 @@ footer {
       <div class="trail-card-illustration">
         <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs>
-            <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0a0c14"/>
-              <stop offset="100%" stop-color="#131828"/>
-            </linearGradient>
-            <radialGradient id="moonglow" cx="75%" cy="25%" r="30%">
-              <stop offset="0%" stop-color="rgba(232,192,122,0.15)"/>
-              <stop offset="100%" stop-color="transparent"/>
-            </radialGradient>
+            <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0a0c14"/><stop offset="100%" stop-color="#131828"/></linearGradient>
+            <radialGradient id="moonglow" cx="75%" cy="25%" r="30%"><stop offset="0%" stop-color="rgba(232,192,122,0.15)"/><stop offset="100%" stop-color="transparent"/></radialGradient>
           </defs>
           <rect width="480" height="220" fill="url(#sky2)"/>
           <rect width="480" height="220" fill="url(#moonglow)"/>
-          <!-- Stars - more of them, night scene -->
           <g fill="#FFF8E7">
             <circle cx="30" cy="15" r="1.2" opacity="0.9"/><circle cx="65" cy="28" r="0.8" opacity="0.7"/>
             <circle cx="100" cy="10" r="1" opacity="0.85"/><circle cx="145" cy="22" r="1.4" opacity="0.9"/>
@@ -620,49 +401,30 @@ footer {
             <circle cx="460" cy="22" r="0.9" opacity="0.8"/><circle cx="75" cy="62" r="0.8" opacity="0.55"/>
             <circle cx="165" cy="60" r="0.6" opacity="0.5"/><circle cx="330" cy="58" r="1" opacity="0.7"/>
           </g>
-          <!-- Moon -->
           <circle cx="360" cy="42" r="22" fill="#FFF8E7" opacity="0.9"/>
           <circle cx="360" cy="42" r="22" fill="none" stroke="rgba(232,192,122,0.3)" stroke-width="8"/>
-          <!-- Dramatic peak -->
           <path d="M0 180 L100 140 L160 160 L220 90 L280 125 L320 105 L360 130 L400 115 L440 135 L480 120 L480 220 L0 220Z" fill="#111622"/>
           <path d="M180 180 L220 90 L260 140 L300 120 L320 105" stroke="rgba(232,192,122,0.15)" stroke-width="1.5" fill="none"/>
           <path d="M0 195 L60 178 L120 185 L190 170 L260 182 L340 172 L420 180 L480 175 L480 220 L0 220Z" fill="#0d1220"/>
-          <!-- Summit marker dot -->
           <circle cx="220" cy="90" r="3" fill="rgba(232,192,122,0.7)"/>
           <circle cx="220" cy="90" r="6" fill="none" stroke="rgba(232,192,122,0.3)" stroke-width="1"/>
-          <!-- Milky way hint -->
           <path d="M0 30 Q120 20 240 40 Q360 58 480 35" stroke="rgba(180,200,255,0.06)" stroke-width="20" fill="none"/>
-          <!-- Foreground -->
           <path d="M0 210 L480 210 L480 220 L0 220Z" fill="#09090f"/>
         </svg>
         <div class="trail-card-overlay"></div>
       </div>
       <div class="trail-card-body">
-        <div class="trail-card-tags">
-          <span class="badge str">Strenuous</span>
-          <span class="badge str">Full Day</span>
-        </div>
+        <div class="trail-card-tags"><span class="badge str">Strenuous</span><span class="badge str">Full Day</span></div>
         <h2 class="trail-card-name">Emory Peak<br>Trail</h2>
         <p class="trail-card-tagline">"The highest point in the park. The kind of summit that earns its bragging rights."</p>
         <div class="trail-stats">
-          <div class="trail-stat">
-            <span class="trail-stat-val">10 mi</span>
-            <span class="trail-stat-label">distance</span>
-          </div>
-          <div class="trail-stat">
-            <span class="trail-stat-val">2,470 ft</span>
-            <span class="trail-stat-label">gain</span>
-          </div>
-          <div class="trail-stat">
-            <span class="trail-stat-val">6–8 hr</span>
-            <span class="trail-stat-label">est. time</span>
-          </div>
+          <div class="trail-stat"><span class="trail-stat-val">10 mi</span><span class="trail-stat-label">distance</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">2,470 ft</span><span class="trail-stat-label">gain</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">6–8 hr</span><span class="trail-stat-label">est. time</span></div>
         </div>
       </div>
       <div class="trail-card-arrow">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-          <path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/></svg>
       </div>
     </a>
 
@@ -674,12 +436,9 @@ footer {
           <rect width="480" height="220" fill="#0e1520"/>
           <path d="M0 160 L80 140 L200 110 L320 130 L420 115 L480 125 L480 220 L0 220Z" fill="#111926"/>
           <path d="M0 190 L100 175 L240 165 L380 178 L480 170 L480 220 L0 220Z" fill="#0d1018"/>
-          <!-- Canyon walls vertical -->
           <rect x="0" y="60" width="90" height="160" fill="#0a1016"/>
           <rect x="390" y="80" width="90" height="140" fill="#0a1016"/>
-          <g fill="#FFF8E7" opacity="0.6">
-            <circle cx="200" cy="20" r="0.8"/><circle cx="250" cy="35" r="1"/><circle cx="300" cy="15" r="0.7"/>
-          </g>
+          <g fill="#FFF8E7" opacity="0.6"><circle cx="200" cy="20" r="0.8"/><circle cx="250" cy="35" r="1"/><circle cx="300" cy="15" r="0.7"/></g>
         </svg>
         <div class="trail-card-overlay"></div>
       </div>
@@ -700,21 +459,12 @@ footer {
       <div class="coming-soon-label">Coming Soon</div>
       <div class="trail-card-illustration">
         <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <defs>
-            <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0c1520"/>
-              <stop offset="100%" stop-color="#1a2a3a"/>
-            </linearGradient>
-          </defs>
+          <defs><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c1520"/><stop offset="100%" stop-color="#1a2a3a"/></linearGradient></defs>
           <rect width="480" height="220" fill="url(#sky3)"/>
           <path d="M0 150 L120 120 L200 135 L320 100 L400 120 L480 110 L480 220 L0 220Z" fill="#111f2e"/>
           <path d="M0 175 L80 158 L200 168 L340 155 L440 165 L480 160 L480 220 L0 220Z" fill="#0d1825"/>
-          <!-- Window pour-off shape -->
           <path d="M190 100 L200 160 L210 100" fill="none" stroke="rgba(232,192,122,0.2)" stroke-width="12" stroke-linecap="round"/>
-          <g fill="#FFF8E7" opacity="0.65">
-            <circle cx="100" cy="25" r="1"/><circle cx="200" cy="18" r="0.8"/><circle cx="320" cy="30" r="1.1"/>
-            <circle cx="400" cy="20" r="0.7"/><circle cx="50" cy="45" r="0.9"/>
-          </g>
+          <g fill="#FFF8E7" opacity="0.65"><circle cx="100" cy="25" r="1"/><circle cx="200" cy="18" r="0.8"/><circle cx="320" cy="30" r="1.1"/><circle cx="400" cy="20" r="0.7"/><circle cx="50" cy="45" r="0.9"/></g>
           <path d="M0 200 L480 200 L480 220 L0 220Z" fill="#09100f"/>
         </svg>
         <div class="trail-card-overlay"></div>
@@ -730,7 +480,6 @@ footer {
         </div>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -758,14 +507,12 @@ footer {
 </footer>
 
 <script>
-// Custom cursor
 const cursor = document.getElementById('cursor');
 const ring = document.getElementById('cursor-ring');
 let mx = 0, my = 0, rx = 0, ry = 0;
 document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
 (function animRing() {
-  rx += (mx - rx) * 0.12;
-  ry += (my - ry) *.12;
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
   ring.style.left = rx+'px'; ring.style.top = ry+'px';
   requestAnimationFrame(animRing);
 })();
@@ -774,55 +521,36 @@ document.querySelectorAll('a').forEach(a => {
   a.addEventListener('mouseleave', () => { cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='32px'; ring.style.height='32px'; });
 });
 
-// Starfield canvas
 const canvas = document.getElementById('stars-canvas');
 const ctx = canvas.getContext('2d');
-let stars = [];
-let W, H;
-
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-}
-resize();
-window.addEventListener('resize', resize);
-
+let stars = [], W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
 function initStars() {
   stars = [];
   for (let i = 0; i < 280; i++) {
-    stars.push({
-      x: Math.random() * W,
-      y: Math.random() * H * 0.75,
-      r: Math.random() * 1.2 + 0.3,
-      o: Math.random() * 0.7 + 0.2,
-      speed: Math.random() * 0.4 + 0.05,
-      phase: Math.random() * Math.PI * 2
-    });
+    stars.push({ x: Math.random()*W, y: Math.random()*H*0.75, r: Math.random()*1.2+0.3, o: Math.random()*0.7+0.2, speed: Math.random()*0.4+0.05, phase: Math.random()*Math.PI*2 });
   }
 }
 initStars();
-
 let t = 0;
 function drawStars() {
   ctx.clearRect(0, 0, W, H);
   t += 0.008;
   stars.forEach(s => {
-    const pulse = s.o + Math.sin(t * s.speed + s.phase) * 0.15;
-    ctx.beginPath();
-    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255,248,231,${pulse})`;
-    ctx.fill();
+    const pulse = s.o + Math.sin(t*s.speed+s.phase)*0.15;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,248,231,${pulse})`; ctx.fill();
   });
   requestAnimationFrame(drawStars);
 }
 drawStars();
 
-// Parallax on scroll
 window.addEventListener('scroll', () => {
   const y = window.scrollY;
-  document.querySelector('.moon').style.transform = `translateY(${y * 0.2}px)`;
-  document.querySelector('.milky-way').style.transform = `translateY(${y * 0.1}px)`;
-  canvas.style.transform = `translateY(${y * 0.15}px)`;
+  document.querySelector('.moon').style.transform = `translateY(${y*0.2}px)`;
+  document.querySelector('.milky-way').style.transform = `translateY(${y*0.1}px)`;
+  canvas.style.transform = `translateY(${y*0.15}px)`;
 });
 </script>
 </body>
