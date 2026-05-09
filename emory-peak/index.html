@@ -476,6 +476,77 @@ footer {
   .hero-stat-row { flex-wrap: wrap; }
   .hero-stat { flex: 1 1 40%; }
 }
+
+/* ── DATA GRAPHICS ── */
+.data-section {
+  position: relative; z-index: 10;
+  max-width: 980px; margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+.data-card {
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  background: rgba(255,248,231,0.02);
+  overflow: hidden;
+}
+.data-card-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.data-card-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.75;
+}
+.data-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.legend-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.45); margin-left: 4px; }
+.chart-wrap { position: relative; width: 100%; height: 260px; padding: 14px 18px 10px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  font-weight: normal; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,248,231,0.3); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+th.r { text-align: right; } th.c { text-align: center; }
+td { padding: 10px 14px; border-bottom: 1px solid rgba(232,192,122,0.05); color: rgba(255,248,231,0.6); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(232,192,122,0.03); }
+td.seg { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); }
+td.num { font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; }
+td.c { text-align: center; }
+.grade-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; display: inline-block;
+}
+.grade-badge.easy { background: rgba(99,153,34,0.15); color: #8dbf55; border: 1px solid rgba(99,153,34,0.3); }
+.grade-badge.moderate { background: rgba(239,159,39,0.12); color: #EF9F27; border: 1px solid rgba(239,159,39,0.3); }
+.grade-badge.steep { background: rgba(226,75,74,0.12); color: #E24B4A; border: 1px solid rgba(226,75,74,0.3); }
+.grade-badge.scramble { background: rgba(153,53,86,0.15); color: #c0607e; border: 1px solid rgba(153,53,86,0.3); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.analysis-card {
+  border: 1px solid rgba(232,192,122,0.12); border-radius: 4px;
+  background: rgba(255,248,231,0.02); padding: 16px 18px;
+}
+.analysis-card-head {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,248,231,0.4); margin-bottom: 10px;
+}
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.analysis-card p { font-size: 12px; color: rgba(255,248,231,0.55); line-height: 1.7; }
+.analysis-card p strong { color: var(--star); font-weight: normal; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); width: 130px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 5px; background: rgba(232,192,122,0.08); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-pct { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); width: 32px; text-align: right; }
+.vs-note { font-size: 11px; color: rgba(255,248,231,0.35); line-height: 1.65; margin-top: 4px; }
+@media (max-width: 600px) { .analysis-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
@@ -497,7 +568,7 @@ footer {
     <li><a href="../lost-mine/">Lost Mine</a></li>
     <li><a href="../emory-peak/" class="active">Emory Peak</a></li>
   </ul>
-  <span class="nav-badge">Pack 171 · Oct 2025</span>
+  <span class="nav-badge">Pack 171 · Oct 2026</span>
 </nav>
 
 <!-- ── HERO ── -->
@@ -762,6 +833,77 @@ footer {
   </div>
 </section>
 
+<!-- ── DATA GRAPHICS ── -->
+<section class="data-section">
+  <div class="section-rule">
+    <span class="section-rule-text">Elevation & Grade Analysis</span>
+  </div>
+
+  <!-- Elevation Profile -->
+  <div class="data-card">
+    <div class="data-card-header">
+      <span class="data-card-title">Elevation Profile — One Way</span>
+      <div class="data-legend">
+        <span class="legend-dot" style="background:#EF9F27;"></span><span class="legend-label">Moderate (5–9%)</span>
+        <span class="legend-dot" style="background:#E24B4A;"></span><span class="legend-label">Steep (9%+)</span>
+        <span class="legend-dot" style="background:#993556;"></span><span class="legend-label">Scramble</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="epChart"></canvas></div>
+  </div>
+
+  <!-- Grade Breakdown Table -->
+  <div class="data-card" style="margin-top:1.25rem;">
+    <div class="data-card-header">
+      <span class="data-card-title">Grade Breakdown (One-Way)</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Segment</th><th>Trail Feature</th>
+            <th class="r">Miles</th><th class="r">Elev. Gain</th>
+            <th class="r">Avg Grade</th><th class="c">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="seg">0.0 – 0.9</td><td>Chisos Basin to Laguna Meadow junction</td><td class="num">0.9</td><td class="num">~250 ft</td><td class="num">~5%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">0.9 – 2.5</td><td>Pinnacles Trail — sustained climb through woodland</td><td class="num">1.6</td><td class="num">~1,050 ft</td><td class="num">~12%</td><td class="c"><span class="grade-badge steep">Steep</span></td></tr>
+          <tr><td class="seg">2.5 – 4.0</td><td>Pinnacles Pass to Emory Peak spur junction</td><td class="num">1.5</td><td class="num">~475 ft</td><td class="num">~6%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">4.0 – 4.7</td><td>Emory Peak spur — rocky, increasingly exposed</td><td class="num">0.7</td><td class="num">~520 ft</td><td class="num">~14%</td><td class="c"><span class="grade-badge steep">Steep</span></td></tr>
+          <tr><td class="seg">4.7 – 5.0</td><td>Class-2 scramble — exposed rock to true summit</td><td class="num">0.3</td><td class="num">~175 ft</td><td class="num">~11% + scramble</td><td class="c"><span class="grade-badge scramble">Scramble</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Analysis Cards Row -->
+  <div class="analysis-grid" style="margin-top:1.25rem;">
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#E24B4A;"></span>Strenuous Rating is Real</div>
+      <p>This is the hardest trail in Big Bend. <strong>2,470 ft of gain over 5 miles</strong> one-way, finishing with a class-2 scramble. All participants should have prior hiking experience and have completed a shorter hike the day before.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#993556;"></span>The Scramble Section</div>
+      <p>The final 0.3 miles to the true summit is class-2 — hands-on exposed rock, not technical. Adults should spot younger Scouts. The false summit at <strong>~7,750 ft</strong> offers essentially the same views and is a fine stopping point.</p>
+    </div>
+  </div>
+
+  <!-- Grade Distribution Bar -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Grade Distribution by Distance</div>
+    <div class="bar-row"><span class="bar-label">Moderate (5–9%)</span><div class="bar-track"><div class="bar-fill" style="width:50%;background:#EF9F27;"></div></div><span class="bar-pct">50%</span></div>
+    <div class="bar-row"><span class="bar-label">Steep (9%+)</span><div class="bar-track"><div class="bar-fill" style="width:44%;background:#E24B4A;"></div></div><span class="bar-pct">44%</span></div>
+    <div class="bar-row" style="margin-bottom:0;"><span class="bar-label">Scramble</span><div class="bar-track"><div class="bar-fill" style="width:6%;background:#993556;"></div></div><span class="bar-pct">6%</span></div>
+  </div>
+
+  <!-- Summit Timing Card -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Summit Timing — Non-Negotiable</div>
+    <p>Depart the Basin trailhead by <strong>6:00 AM</strong>. Target the summit by 10–11 AM. Be off the exposed ridge by <strong>1:00 PM</strong>. October storms at 7,800 ft can develop quickly after midday. The descent takes 3–4 hours for a group — plan accordingly. Post-hike: hot food and early bedtime. The Basin store closes at 6 PM.</p>
+  </div>
+</section>
+
 <!-- ── TRAIL NAV ── -->
 <div class="trail-nav">
   <a class="trail-nav-link" href="../lost-mine/">
@@ -836,6 +978,71 @@ window.addEventListener('scroll', () => {
   const y = window.scrollY;
   document.querySelector('.moon').style.transform = `translateY(${y*0.15}px)`;
   canvas.style.transform = `translateY(${y*0.12}px)`;
+});
+</script>
+
+<!-- Chart.js for elevation profile -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+Chart.defaults.color = 'rgba(255,248,231,0.4)';
+Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+
+const epPts = [
+  {x:0,    y:5350},
+  {x:0.9,  y:5600},
+  {x:2.0,  y:5900},
+  {x:2.8,  y:6350},
+  {x:3.5,  y:6875},
+  {x:4.5,  y:7395},
+  {x:4.75, y:7695},
+  {x:5.0,  y:7825},
+];
+const epColors = ['#EF9F27','#EF9F27','#E24B4A','#E24B4A','#E24B4A','#993556','#993556','#993556'];
+
+new Chart(document.getElementById('epChart'), {
+  type: 'line',
+  data: {
+    datasets: [{
+      data: epPts.map(p => ({x: p.x, y: p.y})),
+      borderColor: '#378ADD', borderWidth: 2.5,
+      pointBackgroundColor: epColors, pointBorderColor: epColors,
+      pointRadius: 5, pointHoverRadius: 7,
+      fill: true, backgroundColor: 'rgba(55,138,221,0.07)', tension: 0.35
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(10,12,20,0.92)',
+        titleColor: '#E8C07A', bodyColor: 'rgba(255,248,231,0.7)',
+        borderColor: 'rgba(232,192,122,0.2)', borderWidth: 1,
+        callbacks: {
+          title: i => 'Mile ' + i[0].parsed.x.toFixed(2),
+          label: i => 'Elevation: ' + i.parsed.y.toLocaleString() + ' ft'
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'linear', min: 0, max: 5,
+        title: { display: true, text: 'miles (one-way)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { stepSize: 1, color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      },
+      y: {
+        min: 5000, max: 8100,
+        title: { display: true, text: 'elevation (ft)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { callback: v => v.toLocaleString(), color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      }
+    }
+  }
 });
 </script>
 </body>
