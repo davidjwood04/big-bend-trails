@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Santa Elena Canyon Trail — Big Bend Scout Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital@0;1&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night: #0a0c14;
+  --dusk: #1a1f35;
+  --mesa: #8B3A1A;
+  --canyon: #C2572A;
+  --sand: #E8C07A;
+  --sage: #7A9E6F;
+  --star: #FFF8E7;
+  --mist: rgba(255,248,231,0.07);
+  --glow: rgba(232,192,122,0.15);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--star);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--sand);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(232,192,122,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+}
+
+/* Stars canvas */
+#stars-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+  background: rgba(10,12,20,0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.nav-home {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--star);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+.nav-home:hover { color: var(--sand); }
+.nav-home svg { opacity: 0.6; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+}
+.nav-links li a {
+  display: block;
+  padding: 0 1rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+  border-right: 1px solid rgba(232,192,122,0.08);
+}
+.nav-links li:last-child a { border-right: none; }
+.nav-links li a:hover,
+.nav-links li a.active { color: var(--sand); }
+.nav-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(232,192,122,0.25);
+  color: rgba(232,192,122,0.6);
+}
+@media (max-width: 640px) {
+  .nav-badge { display: none; }
+  .nav-links li a { padding: 0 0.5rem; font-size: 9px; }
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  z-index: 1;
+  padding: 7rem 2rem 4rem;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  animation: fadein 1s ease both;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.35);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  animation: fadein 0.8s ease both;
+}
+.back-link:hover { color: var(--sand); }
+.back-link svg { transition: transform 0.2s; }
+.back-link:hover svg { transform: translateX(-3px); }
+.hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--star);
+  text-shadow: 0 0 60px rgba(232,192,122,0.15);
+  animation: fadein 1.2s ease both;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--sand);
+  display: block;
+}
+.hero-tagline {
+  font-size: 15px;
+  font-style: italic;
+  color: rgba(255,248,231,0.5);
+  margin-top: 1.25rem;
+  max-width: 500px;
+  line-height: 1.75;
+  animation: fadein 1.4s ease both;
+}
+.hero-stat-row {
+  display: flex;
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid rgba(232,192,122,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  animation: fadein 1.6s ease both;
+}
+.hero-stat {
+  padding: 14px 24px;
+  border-right: 1px solid rgba(232,192,122,0.1);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  color: var(--sand);
+  display: block;
+  margin-bottom: 3px;
+}
+.hero-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+}
+.badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid currentColor;
+  margin-top: 1.25rem;
+}
+.badge.easy { color: #8dbf55; }
+.badge.mod  { color: #EF9F27; }
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── ILLUSTRATION ── */
+.trail-illustration-wrap {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.trail-illustration {
+  width: 100%;
+  height: 320px;
+  border: 1px solid rgba(232,192,122,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+.trail-illustration svg { width: 100%; height: 100%; }
+
+/* ── SECTION RULE ── */
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.section-rule::before, .section-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,192,122,0.3), transparent);
+}
+.section-rule-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* ── CONTENT ── */
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+.main-col h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--sand);
+  margin-bottom: 1rem;
+}
+.main-col p {
+  font-size: 14px;
+  color: rgba(255,248,231,0.65);
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+}
+.main-col p strong { color: var(--star); font-weight: normal; }
+
+/* Pacing */
+.pacing-list { list-style: none; margin: 1.5rem 0 2rem; }
+.pacing-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1rem;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.07);
+  align-items: start;
+}
+.pacing-item:first-child { border-top: 1px solid rgba(232,192,122,0.07); }
+.pacing-mile {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--sand);
+  opacity: 0.8;
+  padding-top: 2px;
+}
+.pacing-desc { font-size: 13px; color: rgba(255,248,231,0.55); line-height: 1.65; }
+.pacing-desc strong { color: var(--star); font-weight: normal; }
+
+/* Sidebar */
+.side-col {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.info-card {
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255,248,231,0.02);
+}
+.info-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.7;
+}
+.info-card-body { padding: 16px; }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.06);
+  font-size: 12px;
+}
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-row-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+}
+.info-row-val { color: var(--star); text-align: right; max-width: 140px; }
+.tip-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.06);
+  font-size: 12px;
+  color: rgba(255,248,231,0.55);
+  line-height: 1.6;
+}
+.tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ── TRAIL NAV ── */
+.trail-nav {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.trail-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  padding: 16px 20px;
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  background: rgba(255,248,231,0.02);
+  transition: border-color 0.3s, background 0.3s;
+  min-width: 180px;
+}
+.trail-nav-link:hover {
+  border-color: rgba(232,192,122,0.3);
+  background: rgba(232,192,122,0.04);
+}
+.trail-nav-dir {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.trail-nav-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--star);
+}
+.trail-nav-link.next { text-align: right; }
+.trail-nav-link.next .trail-nav-dir { justify-content: flex-end; }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255,248,231,0.2);
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .side-col { position: static; }
+  .trail-nav { flex-direction: column; }
+  .trail-nav-link { min-width: auto; width: 100%; }
+  .trail-nav-link.next { text-align: left; }
+  .trail-nav-link.next .trail-nav-dir { justify-content: flex-start; }
+  .hero-stat-row { flex-wrap: wrap; }
+  .hero-stat { flex: 1 1 40%; }
+}
+
+/* ── DATA GRAPHICS ── */
+.data-section {
+  position: relative; z-index: 10;
+  max-width: 980px; margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+.data-card {
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  background: rgba(255,248,231,0.02);
+  overflow: hidden;
+}
+.data-card-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.data-card-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.75;
+}
+.data-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.legend-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.45); margin-left: 4px; }
+.chart-wrap { position: relative; width: 100%; height: 260px; padding: 14px 18px 10px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  font-weight: normal; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,248,231,0.3); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+th.r { text-align: right; } th.c { text-align: center; }
+td { padding: 10px 14px; border-bottom: 1px solid rgba(232,192,122,0.05); color: rgba(255,248,231,0.6); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(232,192,122,0.03); }
+td.seg { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); }
+td.num { font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; }
+td.c { text-align: center; }
+.grade-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; display: inline-block;
+}
+.grade-badge.easy     { background: rgba(99,153,34,0.15);  color: #8dbf55; border: 1px solid rgba(99,153,34,0.3); }
+.grade-badge.moderate { background: rgba(239,159,39,0.12); color: #EF9F27; border: 1px solid rgba(239,159,39,0.3); }
+.grade-badge.steep    { background: rgba(226,75,74,0.12);  color: #E24B4A; border: 1px solid rgba(226,75,74,0.3); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.analysis-card {
+  border: 1px solid rgba(232,192,122,0.12); border-radius: 4px;
+  background: rgba(255,248,231,0.02); padding: 16px 18px;
+}
+.analysis-card-head {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,248,231,0.4); margin-bottom: 10px;
+}
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.analysis-card p { font-size: 12px; color: rgba(255,248,231,0.55); line-height: 1.7; }
+.analysis-card p strong { color: var(--star); font-weight: normal; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); width: 130px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 5px; background: rgba(232,192,122,0.08); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-pct { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); width: 32px; text-align: right; }
+.vs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.vs-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); text-transform: uppercase; letter-spacing: 0.07em; width: 80px; flex-shrink: 0; }
+.vs-bar-wrap { flex: 1; display: flex; gap: 8px; align-items: center; }
+.vs-bar { height: 7px; border-radius: 4px; }
+.vs-val { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); white-space: nowrap; }
+.vs-note { font-size: 11px; color: rgba(255,248,231,0.35); line-height: 1.65; margin-top: 4px; }
+@media (max-width: 600px) { .analysis-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- ── NAVIGATION ── -->
+<nav class="site-nav">
+  <a class="nav-home" href="../">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 7L7 1l6 6M2.5 5.5V13h3v-3.5h3V13h3V5.5" stroke="#E8C07A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Big Bend Trail Guide
+  </a>
+  <ul class="nav-links">
+    <li><a href="../lost-mine/">Lost Mine</a></li>
+    <li><a href="../emory-peak/">Emory Peak</a></li>
+    <li><a href="../santa-elena/" class="active">Santa Elena</a></li>
+  </ul>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a class="back-link" href="../">
+    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+      <path d="M11 5H1M5 1L1 5l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All Trails
+  </a>
+  <p class="hero-eyebrow">Chihuahuan Desert · Easy–Moderate · Half Day</p>
+  <h1 class="hero-title">Santa Elena<br><em>Canyon</em></h1>
+  <p class="hero-tagline">"1,500-foot limestone walls and the Rio Grande at your feet — the most dramatic mile in Texas."</p>
+  <span class="badge mod">Moderate</span>
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <span class="hero-stat-val">1.6 mi</span>
+      <span class="hero-stat-label">Distance</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">~100 ft</span>
+      <span class="hero-stat-label">Elev. Gain</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">1–1.5 hr</span>
+      <span class="hero-stat-label">Est. Time</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">2,460 ft</span>
+      <span class="hero-stat-label">Trailhead Elev.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── ILLUSTRATION ── -->
+<div class="trail-illustration-wrap">
+  <div class="trail-illustration">
+    <svg viewBox="0 0 960 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="sky-se" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0d1525"/>
+          <stop offset="55%" stop-color="#1a2540"/>
+          <stop offset="100%" stop-color="#2d3a55"/>
+        </linearGradient>
+        <linearGradient id="wall-l" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2a1a0a"/>
+          <stop offset="100%" stop-color="#4a2e14"/>
+        </linearGradient>
+        <linearGradient id="wall-r" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5c3818"/>
+          <stop offset="100%" stop-color="#2e1c08"/>
+        </linearGradient>
+        <linearGradient id="river" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1e3a5a"/>
+          <stop offset="100%" stop-color="#102440"/>
+        </linearGradient>
+        <linearGradient id="canyon-glow" x1="0.5" y1="0" x2="0.5" y2="1">
+          <stop offset="0%" stop-color="#E8C07A" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="#C2572A" stop-opacity="0"/>
+        </linearGradient>
+        <radialGradient id="sky-light" cx="50%" cy="0%" r="60%">
+          <stop offset="0%" stop-color="#3a5080" stop-opacity="0.4"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <!-- Ripple pattern for river -->
+        <pattern id="ripple" x="0" y="0" width="40" height="8" patternUnits="userSpaceOnUse">
+          <path d="M0 4 Q10 2 20 4 Q30 6 40 4" stroke="rgba(100,160,220,0.15)" stroke-width="1" fill="none"/>
+        </pattern>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="960" height="320" fill="url(#sky-se)"/>
+      <rect width="960" height="320" fill="url(#sky-light)"/>
+
+      <!-- Stars — only visible in the narrow gap of sky between walls -->
+      <g fill="#FFF8E7">
+        <circle cx="420" cy="18" r="1.2" opacity="0.9"/>
+        <circle cx="460" cy="10" r="0.8" opacity="0.75"/>
+        <circle cx="500" cy="22" r="1.0" opacity="0.85"/>
+        <circle cx="440" cy="35" r="0.7" opacity="0.65"/>
+        <circle cx="480" cy="30" r="1.1" opacity="0.8"/>
+        <circle cx="520" cy="15" r="0.9" opacity="0.7"/>
+        <circle cx="535" cy="40" r="0.6" opacity="0.55"/>
+        <circle cx="408" cy="42" r="0.7" opacity="0.6"/>
+      </g>
+
+      <!-- Glow between walls -->
+      <rect x="280" y="0" width="400" height="320" fill="url(#canyon-glow)"/>
+
+      <!-- ─── LEFT CANYON WALL ─── -->
+      <!-- Main wall face — textured limestone -->
+      <path d="M0 0 L0 320 L310 320 L310 280 L280 255 L285 220 L270 195 L275 160 L260 130 L268 100 L255 70 L262 40 L248 0 Z" fill="url(#wall-l)"/>
+      <!-- Wall top silhouette — jagged mesa -->
+      <path d="M0 0 L30 0 L35 18 L55 8 L70 22 L90 5 L115 15 L130 0 L155 12 L170 0 L190 20 L210 6 L228 16 L248 0 L262 40 L255 70 L268 100 L260 130 L275 160 L270 195 L285 220 L280 255 L310 280 L310 320 L0 320 Z" fill="#1e0e04"/>
+      <!-- Wall face striations — horizontal limestone layers -->
+      <g stroke="rgba(180,120,60,0.12)" stroke-width="1" fill="none">
+        <path d="M0 60 Q80 55 160 65 Q220 70 270 62"/>
+        <path d="M0 90 Q90 85 170 95 Q230 100 275 88"/>
+        <path d="M0 120 Q100 115 180 125 Q240 132 272 118"/>
+        <path d="M0 155 Q110 148 190 158 Q250 165 270 150"/>
+        <path d="M0 190 Q120 183 200 193 Q255 200 268 185"/>
+        <path d="M0 225 Q130 218 210 228 Q260 235 270 220"/>
+        <path d="M0 260 Q140 253 220 263 Q265 270 275 255"/>
+      </g>
+      <!-- Shadow overhang on right edge of left wall -->
+      <path d="M265 80 Q275 120 272 160 Q270 200 280 240 L310 260 L310 0 L265 0 Z" fill="rgba(0,0,0,0.25)"/>
+
+      <!-- ─── RIGHT CANYON WALL ─── -->
+      <path d="M960 0 L960 320 L650 320 L650 275 L672 250 L668 215 L682 188 L676 155 L690 125 L683 92 L696 62 L688 30 L700 0 Z" fill="url(#wall-r)"/>
+      <!-- Wall top silhouette -->
+      <path d="M960 0 L930 0 L925 20 L905 8 L888 24 L870 5 L848 18 L830 0 L810 14 L792 0 L775 22 L758 8 L738 18 L718 4 L700 0 L688 30 L696 62 L683 92 L690 125 L676 155 L682 188 L668 215 L672 250 L650 275 L650 320 L960 320 Z" fill="#240e02"/>
+      <!-- Right wall striations -->
+      <g stroke="rgba(200,140,70,0.1)" stroke-width="1" fill="none">
+        <path d="M960 58 Q880 52 800 62 Q730 68 692 58"/>
+        <path d="M960 88 Q870 82 790 92 Q718 98 686 85"/>
+        <path d="M960 120 Q860 113 778 123 Q705 130 680 116"/>
+        <path d="M960 155 Q850 147 765 157 Q690 164 675 148"/>
+        <path d="M960 190 Q840 182 752 192 Q675 200 670 184"/>
+        <path d="M960 225 Q830 217 740 227 Q662 235 665 218"/>
+        <path d="M960 258 Q820 250 728 260 Q650 268 660 250"/>
+      </g>
+      <!-- Shadow overhang on left edge of right wall -->
+      <path d="M695 78 Q685 118 688 158 Q690 200 680 238 L650 258 L650 0 L695 0 Z" fill="rgba(0,0,0,0.28)"/>
+
+      <!-- ─── CANYON FLOOR & RIVER ─── -->
+      <!-- Gravel / rock floor on each bank -->
+      <path d="M310 320 L310 265 Q340 258 360 262 Q380 266 400 260 Q420 255 440 258 L440 320 Z" fill="#1a1208"/>
+      <path d="M520 320 L520 258 Q540 255 560 260 Q580 265 600 258 Q625 253 650 265 L650 320 Z" fill="#1a1208"/>
+      <!-- River — the Rio Grande -->
+      <path d="M310 268 Q360 260 420 256 Q460 254 480 255 Q500 256 540 258 Q590 262 650 270 L650 320 L310 320 Z" fill="url(#river)"/>
+      <rect x="310" y="256" width="340" height="64" fill="url(#ripple)"/>
+      <!-- River shimmer highlight -->
+      <path d="M320 272 Q400 265 480 263 Q560 261 640 268" stroke="rgba(140,200,255,0.2)" stroke-width="1.5" fill="none"/>
+      <path d="M325 282 Q405 274 480 272 Q555 270 635 278" stroke="rgba(140,200,255,0.1)" stroke-width="1" fill="none"/>
+
+      <!-- ─── TRAIL PATH ─── -->
+      <!-- Trail enters from left across rocks, then the famous creek crossing, into canyon -->
+      <path d="M0 310 Q80 305 150 298 Q220 292 285 282 Q300 278 310 272 Q330 264 370 260 Q420 256 480 255 Q530 256 560 260 Q600 264 635 270" stroke="rgba(232,192,122,0.5)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/>
+      <!-- Stepping stones across river mouth -->
+      <g fill="rgba(200,160,80,0.35)">
+        <ellipse cx="318" cy="270" rx="6" ry="3"/>
+        <ellipse cx="332" cy="267" rx="5" ry="2.5"/>
+        <ellipse cx="344" cy="265" rx="6" ry="3"/>
+        <ellipse cx="358" cy="263" rx="5" ry="2.5"/>
+      </g>
+
+      <!-- Trailhead marker (left entrance) -->
+      <circle cx="16" cy="308" r="4" fill="rgba(232,192,122,0.8)"/>
+      <!-- Canyon viewpoint marker (deep inside) -->
+      <circle cx="590" cy="264" r="3" fill="rgba(232,192,122,0.9)"/>
+      <circle cx="590" cy="264" r="7" fill="none" stroke="rgba(232,192,122,0.35)" stroke-width="1.5"/>
+
+      <!-- Scale indicator -->
+      <line x1="820" y1="308" x2="920" y2="308" stroke="rgba(232,192,122,0.3)" stroke-width="1"/>
+      <line x1="820" y1="304" x2="820" y2="312" stroke="rgba(232,192,122,0.3)" stroke-width="1"/>
+      <line x1="920" y1="304" x2="920" y2="312" stroke="rgba(232,192,122,0.3)" stroke-width="1"/>
+      <text x="870" y="302" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="rgba(232,192,122,0.4)">~0.5 mi</text>
+
+      <!-- Wall height label -->
+      <line x1="316" y1="35" x2="316" y2="265" stroke="rgba(232,192,122,0.15)" stroke-width="1" stroke-dasharray="3,4"/>
+      <text x="325" y="155" font-family="'DM Mono', monospace" font-size="9" fill="rgba(232,192,122,0.35)" transform="rotate(-90,325,155)">1,500 ft</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<section class="content">
+  <div class="section-rule">
+    <span class="section-rule-text">Trail Details</span>
+  </div>
+
+  <div class="content-grid">
+    <!-- Main column -->
+    <div class="main-col">
+      <h2>About This Trail</h2>
+      <p>Santa Elena Canyon is the most visually dramatic hike in all of Big Bend — and at just 1.6 miles round-trip, it's also the most accessible. The trail enters a slot carved by the Rio Grande through a 1,500-foot limestone mesa, with sheer vertical walls rising on both sides and Mexico directly across the river. The effect is immediate and profound.</p>
+      <p>The trail begins at the Santa Elena Canyon Trailhead, crosses Terlingua Creek (a wade or rock-hop depending on water level), then climbs a short but steep switchback to gain the canyon rim before descending into the canyon floor itself. Inside, the river fills nearly the full width of the canyon — you walk along a narrow ledge hugging the American wall, with the water just below your feet.</p>
+      <p>For Scouts, this is the <strong>highest-impact, lowest-effort</strong> trail in the park. It's an ideal complement to a full-day hike like Emory Peak — do this one in the afternoon when the troop is tired but still wants to see something spectacular. The walls glow amber and rust at golden hour; late afternoon light inside the canyon is unlike anything else in the park.</p>
+
+      <div class="section-rule" style="margin-top: 2.5rem;">
+        <span class="section-rule-text">Pacing Guide</span>
+      </div>
+
+      <ul class="pacing-list">
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0</span>
+          <span class="pacing-desc"><strong>Santa Elena Canyon Trailhead (2,460 ft)</strong> — Parking area at the end of Ross Maxwell Scenic Drive, ~45 minutes from the Basin. Chemical toilets at the trailhead. Fill water here — there's no water inside the canyon. The drive itself is spectacular; allow extra time for stops along Ross Maxwell.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0.1</span>
+          <span class="pacing-desc"><strong>Terlingua Creek Crossing</strong> — The first obstacle. In October, this is usually ankle-deep or lower, but conditions vary. Stepping stones are sometimes present. Everyone should expect wet feet; water shoes or quick-dry boots are ideal. Assess the crossing before committing the full group.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0.2</span>
+          <span class="pacing-desc"><strong>Canyon Entrance Switchbacks</strong> — A short, steep climb of about 80 ft to gain the ledge above the river mouth. Concrete steps and handrails are in place for this section. The wall narrows dramatically here — the moment you turn the corner is the big reveal.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0.4</span>
+          <span class="pacing-desc"><strong>Canyon Floor Trail</strong> — The trail follows a ledge above the Rio Grande with the walls pressing close on both sides. Expect narrow sections where the group needs to move single-file. Gaps in the ledge require stepping over or down to river-level boulders. Slow down and help each other through.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0.8</span>
+          <span class="pacing-desc"><strong>Trail End — Canyon Viewpoint</strong> — The maintained trail ends at a natural amphitheater where the walls narrow to their closest point and light filters down from 1,500 ft above. This is the turnaround. Allow 15–20 minutes here. Return the same way — the exit switchbacks feel much easier going down.</span>
+        </li>
+      </ul>
+
+      <h2 style="margin-top: 2rem;">Troop Logistics</h2>
+      <p>The drive from the Chisos Basin to Santa Elena Canyon Trailhead is about 45 minutes via Ross Maxwell Scenic Drive — plan on an hour each way with the group. This makes it a <strong>half-day commitment</strong> at minimum, best planned as a standalone afternoon excursion after an easy morning, or as the only hike on a travel day.</p>
+      <p>The Terlingua Creek crossing is the only real variable. In a normal October the creek is shallow, but recent rain can raise it significantly. <strong>Check NPS conditions</strong> the morning of your visit — rangers at the Castolon Visitor Center (7 miles before the trailhead) can give you a current creek report. If it's too high, the trail is inaccessible.</p>
+      <p>Water: <strong>1 liter per person</strong> is sufficient for this short hike. The canyon interior is significantly cooler than the desert outside — bring a layer for the group in case anyone gets cold standing in shade at river level. Sunscreen matters on the approach trail before you enter the walls.</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="side-col">
+      <div class="info-card">
+        <div class="info-card-header">Trail Specs</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Type</span>
+            <span class="info-row-val">Out &amp; Back</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Distance</span>
+            <span class="info-row-val">1.6 miles</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Elev. Gain</span>
+            <span class="info-row-val">~100 ft</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trailhead</span>
+            <span class="info-row-val">End of Ross Maxwell Dr.</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trailhead Elev.</span>
+            <span class="info-row-val">2,460 ft</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Difficulty</span>
+            <span class="info-row-val">Easy–Moderate</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Est. Time</span>
+            <span class="info-row-val">1–1.5 hrs</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Drive from Basin</span>
+            <span class="info-row-val">~45 min</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Dogs</span>
+            <span class="info-row-val">Not permitted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">Scout Tips</div>
+        <div class="info-card-body">
+          <div class="tip-item">
+            <span class="tip-icon">👟</span>
+            <span>Water shoes or quick-dry boots recommended. Expect to get feet wet at Terlingua Creek regardless of conditions.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🌊</span>
+            <span>Check creek conditions at Castolon Visitor Center before driving to the trailhead. High water can close the trail.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🌅</span>
+            <span>Late afternoon (3–5 PM) is the best light inside the canyon. The walls glow orange when the sun drops low.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🧊</span>
+            <span>Canyon interior is noticeably cooler than the desert outside. Bring a light layer — it can feel 15°F colder in full shade.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🌎</span>
+            <span>Mexico is directly across the river. Remind Scouts — no wading across, no contact with people on the other side per federal law.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">📍</span>
+            <span>No cell service. If your group splits up, designate a clear meeting point at the trailhead parking area.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">October Conditions</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Desert High</span>
+            <span class="info-row-val">88°F (outside)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Canyon Temp</span>
+            <span class="info-row-val">~70–75°F (shaded)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Creek Level</span>
+            <span class="info-row-val">Usually low</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Crowds</span>
+            <span class="info-row-val">Moderate</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trail Condition</span>
+            <span class="info-row-val">Excellent</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">Getting There</div>
+        <div class="info-card-body">
+          <div class="tip-item">
+            <span class="tip-icon">🚗</span>
+            <span>Drive Ross Maxwell Scenic Drive west from the Basin — 45 min. The road itself is worth the trip. Stop at Sotol Vista and Mule Ears overlooks on the way.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">⛽</span>
+            <span>Fill up at the Basin or Panther Junction before heading out — no gas until you return. It's 30+ miles each way.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATA GRAPHICS ── -->
+<section class="data-section">
+  <div class="section-rule">
+    <span class="section-rule-text">Elevation & Grade Analysis</span>
+  </div>
+
+  <!-- Elevation Profile -->
+  <div class="data-card">
+    <div class="data-card-header">
+      <span class="data-card-title">Elevation Profile — One Way</span>
+      <div class="data-legend">
+        <span class="legend-dot" style="background:#639922;"></span><span class="legend-label">Easy (&lt;5%)</span>
+        <span class="legend-dot" style="background:#EF9F27;"></span><span class="legend-label">Moderate (5–9%)</span>
+        <span class="legend-dot" style="background:#E24B4A;"></span><span class="legend-label">Steep (9%+)</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="seChart"></canvas></div>
+  </div>
+
+  <!-- Grade Breakdown Table -->
+  <div class="data-card" style="margin-top:1.25rem;">
+    <div class="data-card-header">
+      <span class="data-card-title">Grade Breakdown (One-Way)</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Segment</th><th>Trail Feature</th>
+            <th class="r">Miles</th><th class="r">Elev. Change</th>
+            <th class="r">Avg Grade</th><th class="c">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="seg">0.0 – 0.1</td><td>Parking area to Terlingua Creek crossing</td><td class="num">0.1</td><td class="num">±0 ft</td><td class="num">&lt;1%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+          <tr><td class="seg">0.1 – 0.2</td><td>Creek crossing to canyon entrance switchbacks</td><td class="num">0.1</td><td class="num">+80 ft</td><td class="num">~15%</td><td class="c"><span class="grade-badge steep">Steep</span></td></tr>
+          <tr><td class="seg">0.2 – 0.4</td><td>Canyon rim ledge — brief descent to river floor</td><td class="num">0.2</td><td class="num">-25 ft</td><td class="num">~2%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+          <tr><td class="seg">0.4 – 0.8</td><td>Canyon floor — narrow ledge trail along Rio Grande</td><td class="num">0.4</td><td class="num">±15 ft</td><td class="num">&lt;2%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Analysis Cards Row -->
+  <div class="analysis-grid" style="margin-top:1.25rem;">
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#639922;"></span>Maximum Payoff, Minimum Effort</div>
+      <p>At 1.6 miles with just ~100 ft of gain, this is the <strong>easiest trail in the park</strong> in terms of fitness demand. Every Scout can do it. Save it for a day when the troop is tired or as a second activity after a bigger hike — it delivers visually despite the short distance.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#E24B4A;"></span>The One Hard Part</div>
+      <p>The only real challenge is the <strong>entrance switchbacks</strong> — 80 ft of steep, concrete-stepped climb in about 0.1 miles. It's brief but feels sharp after the flat approach. After that, the canyon floor is nearly level. Going back out, this section is easy downhill.</p>
+    </div>
+  </div>
+
+  <!-- Grade Distribution Bar -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Grade Distribution by Distance</div>
+    <div class="bar-row"><span class="bar-label">Easy (&lt;5%)</span><div class="bar-track"><div class="bar-fill" style="width:88%;background:#639922;"></div></div><span class="bar-pct">88%</span></div>
+    <div class="bar-row"><span class="bar-label">Moderate (5–9%)</span><div class="bar-track"><div class="bar-fill" style="width:0%;background:#EF9F27;"></div></div><span class="bar-pct">0%</span></div>
+    <div class="bar-row" style="margin-bottom:0;"><span class="bar-label">Steep (9%+)</span><div class="bar-track"><div class="bar-fill" style="width:12%;background:#E24B4A;"></div></div><span class="bar-pct">12%</span></div>
+  </div>
+
+  <!-- Three-trail comparison -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#993556;"></span>All Three Trails — At a Glance</div>
+    <div class="vs-row"><span class="vs-label">Distance</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:16%;background:#8dbf55;"></div><span class="vs-val">Santa Elena 1.6 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:48%;background:#EF9F27;"></div><span class="vs-val">Lost Mine 4.8 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 10 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label">Elev. Gain</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:4%;background:#8dbf55;"></div><span class="vs-val">Santa Elena ~100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:45%;background:#EF9F27;"></div><span class="vs-val">Lost Mine 1,100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 2,470 ft</span></div></div>
+    <div class="vs-row" style="margin-bottom:0;"><span class="vs-label">Time</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:18%;background:#8dbf55;"></div><span class="vs-val">Santa Elena 1–1.5 hr</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:40%;background:#EF9F27;"></div><span class="vs-val">Lost Mine 2.5–3 hr</span></div></div>
+    <div class="vs-row" style="margin-bottom:8px;"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 6–8 hr</span></div></div>
+    <p class="vs-note">Recommended order: Lost Mine (Day 1, acclimate), Emory Peak (Day 2 or 3, summit), Santa Elena Canyon (afternoon add-on any day — pairs well with a drive day or after a big hike).</p>
+  </div>
+
+  <!-- Timing card -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Best Time to Visit · Oct 9–13</div>
+    <p>Aim for a <strong>3:00–5:00 PM arrival</strong> at the trailhead. The canyon faces west and the walls catch direct afternoon light — the color on the limestone is extraordinary. Morning visits work too but the canyon interior is fully shaded and cold. Midday in October is comfortable at this lower elevation (2,460 ft vs. 5,400 ft at the Basin). Drive Ross Maxwell Scenic Drive on the way in and allow an hour for stops — Sotol Vista, Castolon Historic District, and the Santa Elena Canyon overlook (before the trailhead) are all worth the time.</p>
+  </div>
+</section>
+
+<!-- ── TRAIL NAV ── -->
+<div class="trail-nav">
+  <a class="trail-nav-link" href="../emory-peak/">
+    <span class="trail-nav-dir">
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M9 4H1M4 1L1 4l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous Trail
+    </span>
+    <span class="trail-nav-name">Emory Peak</span>
+  </a>
+  <a class="trail-nav-link next" href="../">
+    <span class="trail-nav-dir">
+      Back to
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M1 4h8M6 1l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="trail-nav-name">All Trails</span>
+  </a>
+</div>
+
+<footer>
+  Pack 171 · North Shore District · Capitol Area Council · BSA &nbsp;·&nbsp; Big Bend National Park, Texas
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+(function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a').forEach(a => {
+  a.addEventListener('mouseenter', () => { cursor.style.width='14px'; cursor.style.height='14px'; ring.style.width='50px'; ring.style.height='50px'; });
+  a.addEventListener('mouseleave', () => { cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='32px'; ring.style.height='32px'; });
+});
+
+// Starfield canvas
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [], W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    stars.push({ x: Math.random()*W, y: Math.random()*H*0.6, r: Math.random()*1.1+0.3, o: Math.random()*0.6+0.15, speed: Math.random()*0.4+0.05, phase: Math.random()*Math.PI*2 });
+  }
+}
+initStars();
+let t = 0;
+function drawStars() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.008;
+  stars.forEach(s => {
+    const pulse = s.o + Math.sin(t*s.speed+s.phase)*0.12;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,248,231,${pulse})`; ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// Parallax
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  canvas.style.transform = `translateY(${y*0.12}px)`;
+});
+</script>
+
+<!-- Chart.js for elevation profile -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+Chart.defaults.color = 'rgba(255,248,231,0.4)';
+Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+
+const sePts = [
+  {x:0,    y:2460},
+  {x:0.1,  y:2462},
+  {x:0.2,  y:2542},
+  {x:0.35, y:2520},
+  {x:0.5,  y:2510},
+  {x:0.65, y:2515},
+  {x:0.8,  y:2510},
+];
+const seColors = ['#639922','#639922','#E24B4A','#639922','#639922','#639922','#639922'];
+
+new Chart(document.getElementById('seChart'), {
+  type: 'line',
+  data: {
+    datasets: [{
+      data: sePts.map(p => ({x: p.x, y: p.y})),
+      borderColor: '#378ADD', borderWidth: 2.5,
+      pointBackgroundColor: seColors, pointBorderColor: seColors,
+      pointRadius: 5, pointHoverRadius: 7,
+      fill: true, backgroundColor: 'rgba(55,138,221,0.07)', tension: 0.35
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(10,12,20,0.92)',
+        titleColor: '#E8C07A', bodyColor: 'rgba(255,248,231,0.7)',
+        borderColor: 'rgba(232,192,122,0.2)', borderWidth: 1,
+        callbacks: {
+          title: i => 'Mile ' + i[0].parsed.x.toFixed(2),
+          label: i => 'Elevation: ' + i.parsed.y.toLocaleString() + ' ft'
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'linear', min: 0, max: 0.8,
+        title: { display: true, text: 'miles (one-way)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { stepSize: 0.1, color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      },
+      y: {
+        min: 2400, max: 2620,
+        title: { display: true, text: 'elevation (ft)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { callback: v => v.toLocaleString(), color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
