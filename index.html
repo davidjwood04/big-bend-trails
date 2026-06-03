@@ -276,6 +276,38 @@ footer {
 </head>
 <body>
 
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  BIG BEND TRAIL GUIDE — HOME PAGE SOURCE NOTES                     ║
+  ║                                                                      ║
+  ║  Trail cards (distances, elevation gains, difficulty ratings):       ║
+  ║    NPS Big Bend Official Trail Descriptions                          ║
+  ║    https://www.nps.gov/bibe/planyourvisit/hiking.htm                ║
+  ║                                                                      ║
+  ║  Lost Mine Trail card data:                                          ║
+  ║    https://www.nps.gov/bibe/planyourvisit/lostminetrail.htm         ║
+  ║                                                                      ║
+  ║  Emory Peak Trail card data:                                         ║
+  ║    https://www.nps.gov/bibe/planyourvisit/emorytrail.htm            ║
+  ║                                                                      ║
+  ║  Santa Elena Canyon Trail card data:                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/santaelenacanyon.htm      ║
+  ║                                                                      ║
+  ║  The Window Trail card data (coming soon):                           ║
+  ║    https://www.nps.gov/bibe/planyourvisit/windowtrail.htm           ║
+  ║                                                                      ║
+  ║  Dark sky reserve designation:                                       ║
+  ║    International Dark-Sky Association — Big Bend NP designation     ║
+  ║    https://www.darksky.org/our-work/conservation/idsp/parks/        ║
+  ║                                                                      ║
+  ║  Trip dates (Oct 9–13, 2026):                                        ║
+  ║    Pack 171 trip planning, Capitol Area Council BSA                  ║
+  ║                                                                      ║
+  ║  October weather general guidance:                                   ║
+  ║    NPS Big Bend weather page                                         ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 <canvas id="stars-canvas"></canvas>
@@ -286,6 +318,9 @@ footer {
   <ul class="nav-links">
     <li><a href="./lost-mine/">Lost Mine</a></li>
     <li><a href="./emory-peak/">Emory Peak</a></li>
+    <li><a href="./santa-elena/">Santa Elena</a></li>
+    <li><a href="./window-trail/">The Window</a></li>
+    <li><a href="./south-rim/">South Rim</a></li>
   </ul>
   <span class="nav-badge">Pack 171 · Oct 2026</span>
 </nav>
@@ -367,6 +402,7 @@ footer {
       <div class="trail-card-body">
         <div class="trail-card-tags"><span class="badge mod">Moderate</span><span class="badge mod">Half Day</span></div>
         <h2 class="trail-card-name">Lost Mine<br>Trail</h2>
+        <!-- Tagline: paraphrased from NPS ranger interpretive materials and Falcon Guides Big Bend -->
         <p class="trail-card-tagline">"Rangers call it their single favorite hike in the park — and they've done them all."</p>
         <div class="trail-stats">
           <div class="trail-stat"><span class="trail-stat-val">4.8 mi</span><span class="trail-stat-label">distance</span></div>
@@ -416,6 +452,7 @@ footer {
       <div class="trail-card-body">
         <div class="trail-card-tags"><span class="badge str">Strenuous</span><span class="badge str">Full Day</span></div>
         <h2 class="trail-card-name">Emory Peak<br>Trail</h2>
+        <!-- Tagline: Pack 171 editorial; summit designation from NPS/USGS -->
         <p class="trail-card-tagline">"The highest point in the park. The kind of summit that earns its bragging rights."</p>
         <div class="trail-stats">
           <div class="trail-stat"><span class="trail-stat-val">10 mi</span><span class="trail-stat-label">distance</span></div>
@@ -445,6 +482,7 @@ footer {
       <div class="trail-card-body">
         <div class="trail-card-tags"><span class="badge mod">Moderate</span></div>
         <h2 class="trail-card-name">Santa Elena<br>Canyon</h2>
+        <!-- Tagline: NPS geology/canyon description; wall height from NPS Big Bend geology page -->
         <p class="trail-card-tagline">"1,500-foot limestone walls and the Rio Grande at your feet."</p>
         <div class="trail-stats">
           <div class="trail-stat"><span class="trail-stat-val">1.6 mi</span><span class="trail-stat-label">distance</span></div>
@@ -454,9 +492,8 @@ footer {
       </div>
     </div>
 
-    <!-- Coming soon 2 -->
-    <div class="trail-card coming-soon">
-      <div class="coming-soon-label">Coming Soon</div>
+    <!-- The Window Trail -->
+    <a class="trail-card" href="./window-trail/">
       <div class="trail-card-illustration">
         <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
           <defs><linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0c1520"/><stop offset="100%" stop-color="#1a2a3a"/></linearGradient></defs>
@@ -472,6 +509,7 @@ footer {
       <div class="trail-card-body">
         <div class="trail-card-tags"><span class="badge mod">Moderate</span></div>
         <h2 class="trail-card-name">The Window<br>Trail</h2>
+        <!-- Tagline: Pack 171 editorial; pour-off and return climb consistent with NPS + AllTrails descriptions -->
         <p class="trail-card-tagline">"A pour-off into the desert below — and a brutal climb back."</p>
         <div class="trail-stats">
           <div class="trail-stat"><span class="trail-stat-val">5.6 mi</span><span class="trail-stat-label">distance</span></div>
@@ -479,7 +517,10 @@ footer {
           <div class="trail-stat"><span class="trail-stat-val">3–4 hr</span><span class="trail-stat-label">est. time</span></div>
         </div>
       </div>
-    </div>
+      <div class="trail-card-arrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -492,6 +533,7 @@ footer {
   </div>
   <div class="about-item">
     <span class="about-item-icon">🌌</span>
+    <!-- Dark sky claim: IDA Big Bend International Dark Sky Park designation (largest certified dark sky reserve) -->
     <div class="about-item-title">Darkest Skies on Earth</div>
     <p class="about-item-text">Big Bend hosts the largest certified dark sky reserve in the world. Whatever trail you hike by day, plan a stargazing session at Rio Grande Village by night.</p>
   </div>
