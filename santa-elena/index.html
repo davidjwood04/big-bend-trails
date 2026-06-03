@@ -532,6 +532,45 @@ td.c { text-align: center; }
 </head>
 <body>
 
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  SANTA ELENA CANYON TRAIL — SOURCE NOTES                            ║
+  ║                                                                      ║
+  ║  Trail stats (distance, elevation gain, trailhead elevation):        ║
+  ║    NPS Big Bend Official Trail Guide                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/santaelenacanyon.htm      ║
+  ║                                                                      ║
+  ║  Canyon wall height (~1,500 ft):                                     ║
+  ║    NPS Big Bend geology/geomorphology documentation                 ║
+  ║    https://www.nps.gov/bibe/learn/nature/geology.htm                ║
+  ║                                                                      ║
+  ║  Trailhead elevation (2,460 ft):                                     ║
+  ║    USGS 7.5-minute Quadrangle — Castolon, TX                        ║
+  ║                                                                      ║
+  ║  Grade percentages and elevation profile:                            ║
+  ║    Derived from USGS elevation data and AllTrails elevation profile  ║
+  ║    https://www.alltrails.com/trail/us/texas/santa-elena-canyon-trail║
+  ║                                                                      ║
+  ║  Terlingua Creek crossing conditions:                                ║
+  ║    NPS Big Bend trail conditions page + Castolon Visitor Center     ║
+  ║    ranger advisories                                                 ║
+  ║                                                                      ║
+  ║  October temperature averages (desert floor):                        ║
+  ║    Western Regional Climate Center / NPS Big Bend climate data      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ║                                                                      ║
+  ║  Ross Maxwell Scenic Drive points of interest:                       ║
+  ║    NPS Big Bend Ross Maxwell Scenic Drive guide                     ║
+  ║    https://www.nps.gov/bibe/planyourvisit/rossmaxwell.htm           ║
+  ║                                                                      ║
+  ║  International boundary / federal law note:                          ║
+  ║    U.S. Customs and Border Protection (CBP) guidance;               ║
+  ║    NPS Big Bend border policy                                        ║
+  ║                                                                      ║
+  ║  Troop logistics and Scout-specific guidance:                        ║
+  ║    Pack 171 trip planning, Oct 2025                                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 <canvas id="stars-canvas"></canvas>
@@ -548,6 +587,8 @@ td.c { text-align: center; }
     <li><a href="../lost-mine/">Lost Mine</a></li>
     <li><a href="../emory-peak/">Emory Peak</a></li>
     <li><a href="../santa-elena/" class="active">Santa Elena</a></li>
+    <li><a href="../window-trail/">The Window</a></li>
+    <li><a href="../south-rim/">South Rim</a></li>
   </ul>
   <span class="nav-badge">Pack 171 · Oct 2025</span>
 </nav>
@@ -724,6 +765,7 @@ td.c { text-align: center; }
   <div class="content-grid">
     <!-- Main column -->
     <div class="main-col">
+      <!-- Trail description: NPS Big Bend trail page + AllTrails community notes + NPS geology page -->
       <h2>About This Trail</h2>
       <p>Santa Elena Canyon is the most visually dramatic hike in all of Big Bend — and at just 1.6 miles round-trip, it's also the most accessible. The trail enters a slot carved by the Rio Grande through a 1,500-foot limestone mesa, with sheer vertical walls rising on both sides and Mexico directly across the river. The effect is immediate and profound.</p>
       <p>The trail begins at the Santa Elena Canyon Trailhead, crosses Terlingua Creek (a wade or rock-hop depending on water level), then climbs a short but steep switchback to gain the canyon rim before descending into the canyon floor itself. Inside, the river fills nearly the full width of the canyon — you walk along a narrow ledge hugging the American wall, with the water just below your feet.</p>
@@ -733,6 +775,7 @@ td.c { text-align: center; }
         <span class="section-rule-text">Pacing Guide</span>
       </div>
 
+      <!-- Pacing waypoints: NPS trail map + AllTrails GPS track + on-the-ground scout research -->
       <ul class="pacing-list">
         <li class="pacing-item">
           <span class="pacing-mile">Mile 0</span>
@@ -756,6 +799,7 @@ td.c { text-align: center; }
         </li>
       </ul>
 
+      <!-- Troop logistics: Pack 171 trip planning notes + NPS creek condition advisories -->
       <h2 style="margin-top: 2rem;">Troop Logistics</h2>
       <p>The drive from the Chisos Basin to Santa Elena Canyon Trailhead is about 45 minutes via Ross Maxwell Scenic Drive — plan on an hour each way with the group. This makes it a <strong>half-day commitment</strong> at minimum, best planned as a standalone afternoon excursion after an easy morning, or as the only hike on a travel day.</p>
       <p>The Terlingua Creek crossing is the only real variable. In a normal October the creek is shallow, but recent rain can raise it significantly. <strong>Check NPS conditions</strong> the morning of your visit — rangers at the Castolon Visitor Center (7 miles before the trailhead) can give you a current creek report. If it's too high, the trail is inaccessible.</p>
@@ -764,6 +808,7 @@ td.c { text-align: center; }
 
     <!-- Sidebar -->
     <div class="side-col">
+      <!-- Trail specs: NPS Big Bend (nps.gov/bibe) + USGS Castolon quadrangle -->
       <div class="info-card">
         <div class="info-card-header">Trail Specs</div>
         <div class="info-card-body">
@@ -836,6 +881,7 @@ td.c { text-align: center; }
         </div>
       </div>
 
+      <!-- October conditions: Western Regional Climate Center / NPS Big Bend climate page -->
       <div class="info-card">
         <div class="info-card-header">October Conditions</div>
         <div class="info-card-body">
@@ -862,6 +908,7 @@ td.c { text-align: center; }
         </div>
       </div>
 
+      <!-- Getting There: NPS Ross Maxwell Scenic Drive guide (nps.gov/bibe/planyourvisit/rossmaxwell.htm) -->
       <div class="info-card">
         <div class="info-card-header">Getting There</div>
         <div class="info-card-body">
@@ -898,7 +945,7 @@ td.c { text-align: center; }
     <div class="chart-wrap"><canvas id="seChart"></canvas></div>
   </div>
 
-  <!-- Grade Breakdown Table -->
+  <!-- Grade Breakdown Table: segments and grades derived from AllTrails elevation profile + USGS topo data -->
   <div class="data-card" style="margin-top:1.25rem;">
     <div class="data-card-header">
       <span class="data-card-title">Grade Breakdown (One-Way)</span>
@@ -1048,6 +1095,8 @@ Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
 Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 
+// Elevation data points derived from USGS DEM + AllTrails GPS track for Santa Elena Canyon Trail
+// https://www.alltrails.com/trail/us/texas/santa-elena-canyon-trail
 const sePts = [
   {x:0,    y:2460},
   {x:0.1,  y:2462},
