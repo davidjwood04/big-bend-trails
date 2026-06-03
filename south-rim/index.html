@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>South Rim Trail — Big Bend Scout Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital@0;1&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night: #0a0c14;
+  --dusk: #1a1f35;
+  --mesa: #8B3A1A;
+  --canyon: #C2572A;
+  --sand: #E8C07A;
+  --sage: #7A9E6F;
+  --star: #FFF8E7;
+  --mist: rgba(255,248,231,0.07);
+  --glow: rgba(232,192,122,0.15);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--star);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+.cursor {
+  position: fixed; width: 8px; height: 8px;
+  background: var(--sand); border-radius: 50%;
+  pointer-events: none; z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed; width: 32px; height: 32px;
+  border: 1px solid rgba(232,192,122,0.4); border-radius: 50%;
+  pointer-events: none; z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+}
+#stars-canvas {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  z-index: 0; pointer-events: none;
+}
+.site-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 2rem; height: 56px;
+  background: rgba(10,12,20,0.82);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.nav-home {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem; font-weight: 700; color: var(--star);
+  text-decoration: none; letter-spacing: -0.01em;
+  display: flex; align-items: center; gap: 8px; transition: color 0.2s;
+}
+.nav-home:hover { color: var(--sand); }
+.nav-home svg { opacity: 0.6; }
+.nav-links { display: flex; align-items: center; gap: 0; list-style: none; }
+.nav-links li a {
+  display: block; padding: 0 0.75rem;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,248,231,0.45); text-decoration: none;
+  transition: color 0.2s; border-right: 1px solid rgba(232,192,122,0.08);
+}
+.nav-links li:last-child a { border-right: none; }
+.nav-links li a:hover, .nav-links li a.active { color: var(--sand); }
+.nav-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 2px 8px; border-radius: 20px;
+  border: 1px solid rgba(232,192,122,0.25); color: rgba(232,192,122,0.6);
+}
+@media (max-width: 760px) {
+  .nav-badge { display: none; }
+  .nav-links li a { padding: 0 0.4rem; font-size: 9px; }
+}
+.hero {
+  position: relative; min-height: 70vh;
+  display: flex; flex-direction: column;
+  align-items: flex-start; justify-content: flex-end;
+  z-index: 1; padding: 7rem 2rem 4rem;
+  max-width: 980px; margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace; font-size: 11px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.7; margin-bottom: 1rem;
+  animation: fadein 1s ease both;
+}
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.2em; text-transform: uppercase;
+  color: rgba(255,248,231,0.35); text-decoration: none;
+  margin-bottom: 2rem; transition: color 0.2s; animation: fadein 0.8s ease both;
+}
+.back-link:hover { color: var(--sand); }
+.back-link svg { transition: transform 0.2s; }
+.back-link:hover svg { transform: translateX(-3px); }
+.hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 7vw, 6rem); font-weight: 700;
+  line-height: 0.92; letter-spacing: -0.02em; color: var(--star);
+  text-shadow: 0 0 60px rgba(232,192,122,0.15); animation: fadein 1.2s ease both;
+}
+.hero-title em { font-style: italic; color: var(--sand); display: block; }
+.hero-tagline {
+  font-size: 15px; font-style: italic; color: rgba(255,248,231,0.5);
+  margin-top: 1.25rem; max-width: 500px; line-height: 1.75; animation: fadein 1.4s ease both;
+}
+.hero-stat-row {
+  display: flex; gap: 0; margin-top: 2rem;
+  border: 1px solid rgba(232,192,122,0.15); border-radius: 4px;
+  overflow: hidden; animation: fadein 1.6s ease both;
+}
+.hero-stat { padding: 14px 24px; border-right: 1px solid rgba(232,192,122,0.1); text-align: center; }
+.hero-stat:last-child { border-right: none; }
+.hero-stat-val { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--sand); display: block; margin-bottom: 3px; }
+.hero-stat-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,248,231,0.3); }
+.badge {
+  display: inline-block; font-family: 'DM Mono', monospace;
+  font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase;
+  padding: 3px 9px; border-radius: 20px; border: 1px solid currentColor; margin-top: 1.25rem;
+}
+.badge.str { color: #E24B4A; }
+@keyframes fadein { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+.trail-illustration-wrap {
+  position: relative; z-index: 5; width: 100%;
+  max-width: 980px; margin: 0 auto; padding: 0 2rem;
+}
+.trail-illustration {
+  width: 100%; height: 320px;
+  border: 1px solid rgba(232,192,122,0.1); border-radius: 4px;
+  overflow: hidden; display: block;
+}
+.trail-illustration svg { width: 100%; height: 100%; }
+.section-rule { display: flex; align-items: center; gap: 1rem; margin-bottom: 2.5rem; }
+.section-rule::before, .section-rule::after {
+  content: ''; flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,192,122,0.3), transparent);
+}
+.section-rule-text {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.6; white-space: nowrap;
+}
+.content { position: relative; z-index: 10; max-width: 980px; margin: 0 auto; padding: 4rem 2rem 6rem; }
+.content-grid { display: grid; grid-template-columns: 1fr 340px; gap: 3rem; align-items: start; }
+.main-col h2 { font-family: 'Playfair Display', Georgia, serif; font-size: 1.6rem; font-weight: 700; color: var(--sand); margin-bottom: 1rem; }
+.main-col p { font-size: 14px; color: rgba(255,248,231,0.65); line-height: 1.85; margin-bottom: 1.25rem; }
+.main-col p strong { color: var(--star); font-weight: normal; }
+.callout {
+  border: 1px solid rgba(226,75,74,0.25); border-left: 3px solid #E24B4A;
+  border-radius: 3px; background: rgba(226,75,74,0.05);
+  padding: 14px 16px; margin-bottom: 1.5rem;
+  font-size: 13px; color: rgba(255,248,231,0.7); line-height: 1.65;
+}
+.callout strong { color: #E24B4A; font-weight: normal; }
+.pacing-list { list-style: none; margin: 1.5rem 0 2rem; }
+.pacing-item {
+  display: grid; grid-template-columns: 60px 1fr;
+  gap: 1rem; padding: 14px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.07); align-items: start;
+}
+.pacing-item:first-child { border-top: 1px solid rgba(232,192,122,0.07); }
+.pacing-mile { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--sand); opacity: 0.8; padding-top: 2px; }
+.pacing-desc { font-size: 13px; color: rgba(255,248,231,0.55); line-height: 1.65; }
+.pacing-desc strong { color: var(--star); font-weight: normal; }
+.side-col { position: sticky; top: 80px; display: flex; flex-direction: column; gap: 1.25rem; }
+.info-card { border: 1px solid rgba(232,192,122,0.12); border-radius: 4px; overflow: hidden; background: rgba(255,248,231,0.02); }
+.info-card-header { padding: 12px 16px; border-bottom: 1px solid rgba(232,192,122,0.08); font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--sand); opacity: 0.7; }
+.info-card-body { padding: 16px; }
+.info-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid rgba(232,192,122,0.06); font-size: 12px; }
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-row-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,248,231,0.3); }
+.info-row-val { color: var(--star); text-align: right; max-width: 140px; }
+.tip-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid rgba(232,192,122,0.06); font-size: 12px; color: rgba(255,248,231,0.55); line-height: 1.6; }
+.tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+.trail-nav {
+  position: relative; z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08);
+  max-width: 980px; margin: 0 auto; padding: 2.5rem 2rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+}
+.trail-nav-link {
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none;
+  padding: 16px 20px; border: 1px solid rgba(232,192,122,0.12); border-radius: 4px;
+  background: rgba(255,248,231,0.02); transition: border-color 0.3s, background 0.3s; min-width: 180px;
+}
+.trail-nav-link:hover { border-color: rgba(232,192,122,0.3); background: rgba(232,192,122,0.04); }
+.trail-nav-dir { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,248,231,0.3); display: flex; align-items: center; gap: 6px; }
+.trail-nav-name { font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; color: var(--star); }
+.trail-nav-link.next { text-align: right; }
+.trail-nav-link.next .trail-nav-dir { justify-content: flex-end; }
+footer { position: relative; z-index: 10; border-top: 1px solid rgba(232,192,122,0.08); padding: 2rem 1.5rem; text-align: center; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.12em; color: rgba(255,248,231,0.2); text-transform: uppercase; }
+@media (max-width: 720px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .side-col { position: static; }
+  .trail-nav { flex-direction: column; }
+  .trail-nav-link { min-width: auto; width: 100%; }
+  .trail-nav-link.next { text-align: left; }
+  .trail-nav-link.next .trail-nav-dir { justify-content: flex-start; }
+  .hero-stat-row { flex-wrap: wrap; }
+  .hero-stat { flex: 1 1 40%; }
+}
+.data-section { position: relative; z-index: 10; max-width: 980px; margin: 0 auto; padding: 0 2rem 4rem; }
+.data-card { border: 1px solid rgba(232,192,122,0.12); border-radius: 4px; background: rgba(255,248,231,0.02); overflow: hidden; }
+.data-card-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 14px 18px 10px; border-bottom: 1px solid rgba(232,192,122,0.08); }
+.data-card-title { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sand); opacity: 0.75; }
+.data-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.legend-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.45); margin-left: 4px; }
+.chart-wrap { position: relative; width: 100%; height: 260px; padding: 14px 18px 10px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th { font-family: 'DM Mono', monospace; font-size: 9px; font-weight: normal; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,248,231,0.3); padding: 10px 14px; text-align: left; border-bottom: 1px solid rgba(232,192,122,0.08); }
+th.r { text-align: right; } th.c { text-align: center; }
+td { padding: 10px 14px; border-bottom: 1px solid rgba(232,192,122,0.05); color: rgba(255,248,231,0.6); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(232,192,122,0.03); }
+td.seg { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); }
+td.num { font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; }
+td.c { text-align: center; }
+.grade-badge { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 20px; display: inline-block; }
+.grade-badge.easy     { background: rgba(99,153,34,0.15);  color: #8dbf55; border: 1px solid rgba(99,153,34,0.3); }
+.grade-badge.moderate { background: rgba(239,159,39,0.12); color: #EF9F27; border: 1px solid rgba(239,159,39,0.3); }
+.grade-badge.steep    { background: rgba(226,75,74,0.12);  color: #E24B4A; border: 1px solid rgba(226,75,74,0.3); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.analysis-card { border: 1px solid rgba(232,192,122,0.12); border-radius: 4px; background: rgba(255,248,231,0.02); padding: 16px 18px; }
+.analysis-card-head { display: flex; align-items: center; gap: 8px; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,248,231,0.4); margin-bottom: 10px; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.analysis-card p { font-size: 12px; color: rgba(255,248,231,0.55); line-height: 1.7; }
+.analysis-card p strong { color: var(--star); font-weight: normal; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); width: 130px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 5px; background: rgba(232,192,122,0.08); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-pct { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); width: 32px; text-align: right; }
+.vs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.vs-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); text-transform: uppercase; letter-spacing: 0.07em; width: 80px; flex-shrink: 0; }
+.vs-bar-wrap { flex: 1; display: flex; gap: 8px; align-items: center; }
+.vs-bar { height: 7px; border-radius: 4px; }
+.vs-val { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); white-space: nowrap; }
+.vs-note { font-size: 11px; color: rgba(255,248,231,0.35); line-height: 1.65; margin-top: 4px; }
+@media (max-width: 600px) { .analysis-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  SOUTH RIM TRAIL — SOURCE NOTES                                     ║
+  ║                                                                      ║
+  ║  Trail stats (distance, elevation gain, loop configuration):         ║
+  ║    NPS Big Bend Official Trail Guide                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/southrimtrail.htm         ║
+  ║                                                                      ║
+  ║  Trailhead elevation (5,401 ft / Chisos Basin):                      ║
+  ║    USGS 7.5-minute Quadrangle — Chisos Mountains, TX                ║
+  ║                                                                      ║
+  ║  South Rim elevation (~7,200–7,400 ft):                              ║
+  ║    USGS 7.5-minute Quadrangle — Emory Peak, TX                      ║
+  ║    Confirmed via AllTrails GPS track                                 ║
+  ║    https://www.alltrails.com/trail/us/texas/south-rim-loop          ║
+  ║                                                                      ║
+  ║  Grade percentages and segment breakdowns:                           ║
+  ║    Derived from USGS DEM and AllTrails elevation profile             ║
+  ║                                                                      ║
+  ║  Strenuous rating / loop route description:                          ║
+  ║    Consistent with NPS, AllTrails, and Falcon Guides Big Bend       ║
+  ║                                                                      ║
+  ║  Mexico / Chihuahua Desert views description:                        ║
+  ║    NPS Big Bend interpretive materials; consistent with published    ║
+  ║    hiking guides (Hiking Big Bend National Park, Falcon Guides)     ║
+  ║                                                                      ║
+  ║  Lightning / storm safety at rim elevation:                          ║
+  ║    NPS Big Bend safety guidance                                      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/safety.htm                ║
+  ║                                                                      ║
+  ║  October temperature averages (Basin + rim adjustment):              ║
+  ║    Western Regional Climate Center / NPS Big Bend climate data      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ║                                                                      ║
+  ║  Pinnacles / Laguna Meadow route options:                            ║
+  ║    NPS Big Bend trail junction map                                   ║
+  ║                                                                      ║
+  ║  Backcountry permit requirement:                                     ║
+  ║    NPS Big Bend backcountry permits page                             ║
+  ║    https://www.nps.gov/bibe/planyourvisit/backcountry.htm           ║
+  ║                                                                      ║
+  ║  Troop logistics and Scout-specific guidance:                        ║
+  ║    Pack 171 trip planning, Oct 2025                                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- ── NAVIGATION ── -->
+<nav class="site-nav">
+  <a class="nav-home" href="../">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 7L7 1l6 6M2.5 5.5V13h3v-3.5h3V13h3V5.5" stroke="#E8C07A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Big Bend Trail Guide
+  </a>
+  <ul class="nav-links">
+    <li><a href="../lost-mine/">Lost Mine</a></li>
+    <li><a href="../emory-peak/">Emory Peak</a></li>
+    <li><a href="../santa-elena/">Santa Elena</a></li>
+    <li><a href="../window-trail/">The Window</a></li>
+    <li><a href="../south-rim/" class="active">South Rim</a></li>
+  </ul>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a class="back-link" href="../">
+    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+      <path d="M11 5H1M5 1L1 5l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All Trails
+  </a>
+  <!-- Hero eyebrow: NPS trail classification + Pack 171 trip planning -->
+  <p class="hero-eyebrow">Chisos Mountains · Strenuous · Full Day</p>
+  <h1 class="hero-title">South Rim<br><em>Loop</em></h1>
+  <!-- Tagline: Pack 171 editorial; rim views consistent with NPS interpretive materials -->
+  <p class="hero-tagline">"Stand on the edge of the Chisos and look straight down 2,000 feet into Mexico. There is nothing else like it in Texas."</p>
+  <span class="badge str">Strenuous</span>
+  <!-- Stats: NPS Big Bend trail page + AllTrails GPS track -->
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <span class="hero-stat-val">12–14 mi</span>
+      <span class="hero-stat-label">Distance</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">~2,100 ft</span>
+      <span class="hero-stat-label">Elevation Gain</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">7–9 hr</span>
+      <span class="hero-stat-label">Est. Time</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">~7,400 ft</span>
+      <span class="hero-stat-label">Rim Elevation</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── ILLUSTRATION ── -->
+<div class="trail-illustration-wrap">
+  <div class="trail-illustration">
+    <svg viewBox="0 0 960 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <!-- Pre-dawn / blue hour sky — an early start is required -->
+        <linearGradient id="sky-sr" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#060810"/>
+          <stop offset="50%" stop-color="#0e1422"/>
+          <stop offset="100%" stop-color="#1a2035"/>
+        </linearGradient>
+        <!-- Horizon glow — distant Mexico desert in afternoon light -->
+        <linearGradient id="horizon-glow" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#C2572A" stop-opacity="0.0"/>
+          <stop offset="70%" stop-color="#C2572A" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#E8C07A" stop-opacity="0.35"/>
+        </linearGradient>
+        <!-- Rim cliff face -->
+        <linearGradient id="rim-face" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3a2010"/>
+          <stop offset="100%" stop-color="#180e05"/>
+        </linearGradient>
+        <!-- Far desert below -->
+        <linearGradient id="desert-below" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#2a1e10"/>
+          <stop offset="100%" stop-color="#150e06"/>
+        </linearGradient>
+        <radialGradient id="milky-sr" cx="45%" cy="30%" r="55%">
+          <stop offset="0%" stop-color="rgba(100,120,200,0.08)"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Deep pre-dawn sky -->
+      <rect width="960" height="320" fill="url(#sky-sr)"/>
+      <rect width="960" height="320" fill="url(#milky-sr)"/>
+      <!-- Horizon desert glow -->
+      <rect width="960" height="320" fill="url(#horizon-glow)"/>
+
+      <!-- Dense starfield — this is the dark sky payoff of the rim -->
+      <g fill="#FFF8E7">
+        <!-- Bright stars -->
+        <circle cx="48"  cy="14" r="1.4" opacity="0.95"/>
+        <circle cx="112" cy="28" r="1.1" opacity="0.88"/>
+        <circle cx="178" cy="10" r="1.5" opacity="0.92"/>
+        <circle cx="244" cy="35" r="0.9" opacity="0.80"/>
+        <circle cx="312" cy="18" r="1.3" opacity="0.90"/>
+        <circle cx="380" cy="8"  r="1.0" opacity="0.85"/>
+        <circle cx="448" cy="25" r="1.4" opacity="0.93"/>
+        <circle cx="516" cy="12" r="1.1" opacity="0.87"/>
+        <circle cx="584" cy="32" r="1.3" opacity="0.91"/>
+        <circle cx="652" cy="16" r="0.9" opacity="0.82"/>
+        <circle cx="720" cy="28" r="1.5" opacity="0.94"/>
+        <circle cx="788" cy="10" r="1.2" opacity="0.88"/>
+        <circle cx="856" cy="24" r="1.0" opacity="0.85"/>
+        <circle cx="920" cy="14" r="1.4" opacity="0.92"/>
+        <!-- Medium stars -->
+        <circle cx="80"  cy="50" r="0.8" opacity="0.72"/>
+        <circle cx="145" cy="62" r="1.0" opacity="0.78"/>
+        <circle cx="210" cy="44" r="0.7" opacity="0.65"/>
+        <circle cx="275" cy="58" r="0.9" opacity="0.74"/>
+        <circle cx="340" cy="48" r="1.1" opacity="0.80"/>
+        <circle cx="408" cy="65" r="0.8" opacity="0.70"/>
+        <circle cx="472" cy="42" r="0.7" opacity="0.65"/>
+        <circle cx="538" cy="56" r="1.0" opacity="0.76"/>
+        <circle cx="604" cy="46" r="0.9" opacity="0.73"/>
+        <circle cx="668" cy="60" r="1.1" opacity="0.80"/>
+        <circle cx="734" cy="44" r="0.8" opacity="0.70"/>
+        <circle cx="800" cy="58" r="0.7" opacity="0.65"/>
+        <circle cx="864" cy="48" r="1.0" opacity="0.76"/>
+        <circle cx="932" cy="62" r="0.8" opacity="0.72"/>
+        <!-- Faint background stars -->
+        <circle cx="62"  cy="78" r="0.6" opacity="0.50"/>
+        <circle cx="128" cy="82" r="0.7" opacity="0.55"/>
+        <circle cx="195" cy="74" r="0.5" opacity="0.45"/>
+        <circle cx="260" cy="86" r="0.6" opacity="0.52"/>
+        <circle cx="325" cy="76" r="0.7" opacity="0.56"/>
+        <circle cx="390" cy="88" r="0.5" opacity="0.44"/>
+        <circle cx="455" cy="72" r="0.6" opacity="0.50"/>
+        <circle cx="520" cy="84" r="0.7" opacity="0.55"/>
+        <circle cx="586" cy="78" r="0.5" opacity="0.46"/>
+        <circle cx="650" cy="88" r="0.6" opacity="0.52"/>
+        <circle cx="716" cy="74" r="0.7" opacity="0.56"/>
+        <circle cx="780" cy="82" r="0.5" opacity="0.44"/>
+        <circle cx="845" cy="76" r="0.6" opacity="0.50"/>
+        <circle cx="910" cy="86" r="0.7" opacity="0.55"/>
+      </g>
+      <!-- Milky Way band -->
+      <path d="M0 55 Q240 35 480 55 Q720 75 960 45" stroke="rgba(140,165,255,0.06)" stroke-width="32" fill="none"/>
+
+      <!-- ── HIGH CHISOS RIM — the South Rim viewpoint ── -->
+      <!-- The rim runs across the entire middle — flat, exposed, dramatic -->
+      <!-- Background silhouette range (Mexico mountains) -->
+      <path d="M0 230 L80 210 L160 218 L240 200 L320 212 L400 198 L480 205 L560 195 L640 208 L720 196 L800 210 L880 200 L960 208 L960 320 L0 320Z" fill="#120b04"/>
+      <!-- Distant desert floor — what you see looking south from the rim -->
+      <path d="M0 248 L960 248 L960 320 L0 320Z" fill="url(#desert-below)"/>
+      <!-- Mid-ground ridge -->
+      <path d="M0 235 L100 222 L200 230 L320 218 L440 226 L560 215 L680 224 L800 212 L920 222 L960 218 L960 248 L0 248Z" fill="#1a0e06"/>
+
+      <!-- The actual South Rim cliff edge — sheer drop -->
+      <!-- Left section of rim -->
+      <path d="M0 148 L0 175 L80 168 L140 162 L200 158 L260 165 L300 160 L340 168 L380 162 L420 158 L460 162 L480 160Z" fill="url(#rim-face)"/>
+      <!-- Right section of rim -->
+      <path d="M960 148 L960 175 L880 168 L820 162 L760 158 L700 165 L660 160 L620 168 L580 162 L540 158 L510 162 L480 160Z" fill="url(#rim-face)"/>
+      <!-- Rim top edge — the actual standing-on-the-rim line -->
+      <path d="M0 148 L80 138 L140 132 L200 138 L260 128 L320 135 L380 126 L440 133 L480 130 L520 133 L580 126 L640 135 L700 128 L760 138 L820 132 L880 138 L960 148" fill="none" stroke="rgba(232,192,122,0.25)" stroke-width="1.5"/>
+      <!-- Rim rock texture -->
+      <path d="M0 148 L80 138 L140 132 L200 138 L260 128 L320 135 L380 126 L440 133 L480 130 L520 133 L580 126 L640 135 L700 128 L760 138 L820 132 L880 138 L960 148 L960 175 L880 168 L820 162 L760 158 L700 165 L660 160 L620 168 L580 162 L540 158 L510 162 L480 160 L460 162 L420 158 L380 162 L340 168 L300 160 L260 165 L200 158 L140 162 L80 168 L0 175Z" fill="#2a1808"/>
+      <!-- Rock striations on cliff face -->
+      <g stroke="rgba(200,140,60,0.08)" stroke-width="1" fill="none">
+        <path d="M0 155 Q160 150 320 155 Q480 160 640 155 Q800 150 960 155"/>
+        <path d="M0 163 Q160 158 320 163 Q480 168 640 163 Q800 158 960 163"/>
+        <path d="M0 170 Q160 165 320 170 Q480 175 640 170 Q800 165 960 170"/>
+      </g>
+
+      <!-- Foreground rocky terrain — on top of the rim -->
+      <path d="M0 175 L0 320 L960 320 L960 175 L880 168 L820 162 L760 158 L700 165 L660 160 L620 168 L580 162 L540 158 L510 162 L480 160 L460 162 L420 158 L380 162 L340 168 L300 160 L260 165 L200 158 L140 162 L80 168 Z" fill="#1a1008"/>
+
+      <!-- Rocky outcrops on rim -->
+      <g fill="#2e1a0a">
+        <ellipse cx="150" cy="170" rx="25" ry="12"/>
+        <ellipse cx="310" cy="162" rx="20" ry="10"/>
+        <ellipse cx="480" cy="158" rx="28" ry="13"/>
+        <ellipse cx="650" cy="162" rx="22" ry="11"/>
+        <ellipse cx="810" cy="168" rx="24" ry="12"/>
+      </g>
+
+      <!-- Trail loop path — goes up via Pinnacles, traverses rim, returns via Laguna Meadow -->
+      <!-- Up leg (Pinnacles route — left side) -->
+      <path d="M120 308 Q140 295 165 280 Q190 265 210 252 Q230 240 248 228 Q262 218 270 205 Q278 192 282 178 Q285 168 290 160" stroke="rgba(232,192,122,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/>
+      <!-- Rim traverse -->
+      <path d="M290 160 Q380 148 480 145 Q580 148 670 160" stroke="rgba(232,192,122,0.55)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <!-- Return leg (Laguna Meadow route — right side) -->
+      <path d="M670 160 Q680 168 688 178 Q694 192 700 205 Q710 218 725 228 Q745 240 765 252 Q785 265 810 280 Q835 295 855 308" stroke="rgba(232,192,122,0.4)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/>
+
+      <!-- Trailhead marker -->
+      <circle cx="120" cy="308" r="4" fill="rgba(232,192,122,0.8)"/>
+      <!-- Return trailhead (same point, other side of loop) -->
+      <circle cx="855" cy="308" r="3" fill="rgba(232,192,122,0.5)"/>
+      <!-- South Rim viewpoint marker -->
+      <circle cx="480" cy="145" r="3.5" fill="rgba(232,192,122,0.95)"/>
+      <circle cx="480" cy="145" r="8" fill="none" stroke="rgba(232,192,122,0.4)" stroke-width="1.5"/>
+
+      <!-- View arrows — what you see from the rim -->
+      <g stroke="rgba(232,192,122,0.2)" stroke-width="1" fill="none">
+        <path d="M480 155 L480 200"/>
+        <path d="M475 196 L480 202 L485 196"/>
+      </g>
+      <text x="486" y="192" font-family="'DM Mono', monospace" font-size="8" fill="rgba(232,192,122,0.3)">Mexico</text>
+
+      <!-- Elevation annotation on cliff -->
+      <line x1="50" y1="138" x2="50" y2="230" stroke="rgba(232,192,122,0.12)" stroke-width="1" stroke-dasharray="2,4"/>
+      <text x="58" y="188" font-family="'DM Mono', monospace" font-size="8" fill="rgba(232,192,122,0.3)" transform="rotate(-90,58,188)">~2,000 ft drop</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<section class="content">
+  <div class="section-rule">
+    <span class="section-rule-text">Trail Details</span>
+  </div>
+
+  <div class="content-grid">
+    <div class="main-col">
+      <!-- Trail description: NPS Big Bend trail page + AllTrails + Falcon Guides Big Bend -->
+      <h2>About This Trail</h2>
+      <p>The South Rim Loop is the grandest hike in Big Bend National Park — a full traverse of the southern Chisos rim with views that extend 200 miles into Mexico on clear days. The trail climbs from the Basin through either the Pinnacles or Laguna Meadow route to reach the rim at roughly 7,200–7,400 feet, then follows the exposed edge for nearly two miles before looping back. At 12–14 miles depending on your chosen route, it is the longest and most committing day hike the park offers.</p>
+      <p>The payoff justifies every step. Standing on the South Rim, you're looking straight down a 2,000-foot cliff face into the Chihuahuan Desert of northern Mexico. The Sierra del Carmen glows rust and amber to the east. The Fronteriza range fills the southern horizon. On good days you can see volcanic peaks 150 miles away. There is no comparable vantage point in Texas.</p>
+      <p>For Scouts, this is the <strong>capstone hike of the trip</strong> — saved for the group's strongest day and strongest legs. It is longer than Emory Peak and covers more exposed terrain. The recommended loop goes up via the Pinnacles Trail and returns via Laguna Meadow, allowing you to ascend on a more direct route and descend through the shaded upper drainage.</p>
+
+      <!-- Strenuous rating: NPS difficulty classification + consistent with AllTrails and Falcon Guides -->
+      <div class="callout">
+        <strong>⚠ Plan this one carefully.</strong> At 12–14 miles with 2,100 ft of gain at high elevation, the South Rim requires the same preparation as Emory Peak — early start, full water, real food, designated sweep adults. Do not attempt this without a prior warm-up hike. It is not a hike to do on Day 1.
+      </div>
+
+      <div class="section-rule" style="margin-top: 2.5rem;">
+        <span class="section-rule-text">Pacing Guide — Pinnacles Up / Laguna Meadow Down</span>
+      </div>
+
+      <!-- Pacing waypoints: NPS trail map + AllTrails GPS track + NPS junction signage -->
+      <ul class="pacing-list">
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0</span>
+          <span class="pacing-desc"><strong>Chisos Basin Trailhead (5,401 ft)</strong> — Same trailhead as Emory Peak, behind the lodge. Depart by 6:00 AM. Water and restrooms at the Basin store. Fill every container — water is unavailable until you return to the Basin. Trail begins on the Pinnacles Trail heading south and climbing immediately.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 2.8</span>
+          <span class="pacing-desc"><strong>Pinnacles Pass (~6,800 ft)</strong> — The trail crests a high saddle with dramatic views of the Basin below and Casa Grande peak above. This is a natural rest point roughly a third of the way in. Check in on the group here — anyone flagging should consider whether to continue. The rim is still 2+ miles of climbing ahead.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 4.5</span>
+          <span class="pacing-desc"><strong>Emory Peak Junction</strong> — Trail intersects the Emory Peak spur. Continue straight on the South Rim Trail. From here the trail traverses high terrain toward the rim proper, passing through open pinyon-juniper forest with increasingly wide views opening to the south.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 5.5</span>
+          <span class="pacing-desc"><strong>South Rim — First Overlook (~7,200 ft)</strong> — The rim edge arrives suddenly. The desert drops away 2,000 feet below your feet into Mexico. Stop, rest, take it in. This is the moment the whole hike builds toward. The maintained trail continues east along the rim for another 1.5 miles of continuous cliff-edge views.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 7.0</span>
+          <span class="pacing-desc"><strong>Southeast Rim / Boot Canyon Junction (~7,400 ft)</strong> — The trail reaches its highest and most exposed point, near the Boot Canyon junction. The Sierra del Carmen range fills the eastern horizon. This is the turnaround for the rim traverse — the return route heads north via Laguna Meadow. Rest here for 20–30 minutes before the descent.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 7–12</span>
+          <span class="pacing-desc"><strong>Laguna Meadow Descent back to Basin</strong> — The return via Laguna Meadow is gentler in grade than the Pinnacles ascent, descending through open grassland and oak-pine forest. The meadow itself (around mile 9) is a beautiful flat stretch — use it to regroup and redistribute snacks before the final push back to the Basin. Return trailhead approximately mile 12–14 depending on exact route taken.</span>
+        </li>
+      </ul>
+
+      <!-- Troop logistics: Pack 171 trip planning + NPS backcountry permit requirements -->
+      <h2 style="margin-top: 2rem;">Troop Logistics</h2>
+      <p>The South Rim is the same <strong>6:00 AM departure</strong> as Emory Peak — it takes the same amount of time or more. Get to the rim by 10–11 AM to have time on the edge before the afternoon builds. The rim is fully exposed with no shelter; lightning at 7,400 feet is a life-safety issue. <strong>Be off the rim by 1:00 PM</strong> regardless of conditions.</p>
+      <p>This hike requires <strong>3 liters of water per person minimum</strong>. The distance and duration are unforgiving if anyone runs dry. Pack a full lunch — the rim is one of the best picnic spots on earth. Bring warm layers; the rim sits 2,000 feet above the Basin and wind is constant and cold even in October.</p>
+      <p>The recommended route is <strong>Pinnacles up, Laguna Meadow down</strong> — this puts the steeper, more direct climb in the morning when legs are fresh, and the gentler descent in the afternoon. The reverse is possible but harder. Both routes start and end at the same Basin trailhead, making this a true loop.</p>
+      <p>Note: if the group plans an overnight, the South Rim has designated backcountry campsites that require a permit from the NPS backcountry office at Panther Junction. As a day hike, no permit is needed.</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="side-col">
+      <!-- Trail specs: NPS Big Bend (nps.gov/bibe) + USGS Emory Peak + Chisos Mountains quadrangles -->
+      <div class="info-card">
+        <div class="info-card-header">Trail Specs</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Type</span>
+            <span class="info-row-val">Loop</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Distance</span>
+            <span class="info-row-val">12–14 miles</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Elev. Gain</span>
+            <span class="info-row-val">~2,100 ft</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trailhead</span>
+            <span class="info-row-val">Chisos Basin (5,401 ft)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Rim Elevation</span>
+            <span class="info-row-val">~7,200–7,400 ft</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Difficulty</span>
+            <span class="info-row-val">Strenuous</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Est. Time</span>
+            <span class="info-row-val">7–9 hrs</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Route</span>
+            <span class="info-row-val">Pinnacles up / Laguna Meadow down</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Permit</span>
+            <span class="info-row-val">Day hike: none</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Dogs</span>
+            <span class="info-row-val">Not permitted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">Scout Tips</div>
+        <div class="info-card-body">
+          <div class="tip-item">
+            <span class="tip-icon">💧</span>
+            <span>3L minimum per person. Zero water on route. This is the most important prep item for this hike.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">⏰</span>
+            <span>6 AM start. Rim by 10–11 AM. Off exposed rim by 1 PM. Same discipline as Emory Peak — non-negotiable.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🌩️</span>
+            <span>The rim is fully exposed at 7,400 ft. Lightning in October is rare but real. No metal poles, no hesitation to retreat.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🧥</span>
+            <span>Bring a wind layer. The rim is cold and constantly breezy even when it's warm in the Basin below.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🍱</span>
+            <span>Pack a real lunch for the rim. You'll be out 7–9 hours and the South Rim is the best picnic spot in Texas.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🗺️</span>
+            <span>Download the NPS Big Bend offline map before leaving. Junctions are signed but the loop covers a lot of ground.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🏕️</span>
+            <span>This is the best hike to save for the end of the trip — after the group has their trail legs and knows the park.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- October conditions: Western Regional Climate Center / NPS Big Bend climate page -->
+      <div class="info-card">
+        <div class="info-card-header">October Conditions</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Basin High</span>
+            <span class="info-row-val">75°F</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Rim High</span>
+            <span class="info-row-val">~55–60°F</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Rim Wind</span>
+            <span class="info-row-val">Moderate–Strong</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Storm Risk</span>
+            <span class="info-row-val">Low–Moderate PM</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Crowds</span>
+            <span class="info-row-val">Low</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trail Condition</span>
+            <span class="info-row-val">Excellent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATA GRAPHICS ── -->
+<section class="data-section">
+  <div class="section-rule">
+    <span class="section-rule-text">Elevation & Grade Analysis</span>
+  </div>
+
+  <!-- Elevation data: USGS DEM + AllTrails GPS track for South Rim Loop -->
+  <!-- https://www.alltrails.com/trail/us/texas/south-rim-loop -->
+  <div class="data-card">
+    <div class="data-card-header">
+      <span class="data-card-title">Elevation Profile — Pinnacles Up / Laguna Meadow Down</span>
+      <div class="data-legend">
+        <span class="legend-dot" style="background:#639922;"></span><span class="legend-label">Easy (&lt;5%)</span>
+        <span class="legend-dot" style="background:#EF9F27;"></span><span class="legend-label">Moderate (5–9%)</span>
+        <span class="legend-dot" style="background:#E24B4A;"></span><span class="legend-label">Steep (9%+)</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="srChart"></canvas></div>
+  </div>
+
+  <!-- Grade breakdown: USGS topo + AllTrails elevation profile -->
+  <div class="data-card" style="margin-top:1.25rem;">
+    <div class="data-card-header">
+      <span class="data-card-title">Grade Breakdown — Full Loop</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Segment</th><th>Trail Feature</th>
+            <th class="r">Miles</th><th class="r">Elev. Change</th>
+            <th class="r">Avg Grade</th><th class="c">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="seg">0.0 – 2.8</td><td>Pinnacles Trail — steady climb to Pinnacles Pass</td><td class="num">2.8</td><td class="num">+1,400 ft</td><td class="num">~10%</td><td class="c"><span class="grade-badge steep">Steep</span></td></tr>
+          <tr><td class="seg">2.8 – 4.5</td><td>Pinnacles Pass to Emory Peak junction</td><td class="num">1.7</td><td class="num">+380 ft</td><td class="num">~4%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+          <tr><td class="seg">4.5 – 5.5</td><td>Approach to South Rim first overlook</td><td class="num">1.0</td><td class="num">+320 ft</td><td class="num">~6%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">5.5 – 7.0</td><td>South Rim traverse — exposed cliff edge</td><td class="num">1.5</td><td class="num">±100 ft</td><td class="num">&lt;2%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+          <tr><td class="seg">7.0 – 9.5</td><td>Laguna Meadow descent — open grassland</td><td class="num">2.5</td><td class="num">-1,050 ft</td><td class="num">~8%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">9.5 – 12.0</td><td>Lower Laguna Meadow to Basin trailhead</td><td class="num">2.5</td><td class="num">-1,050 ft</td><td class="num">~8%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Analysis Cards -->
+  <div class="analysis-grid" style="margin-top:1.25rem;">
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#E24B4A;"></span>The Hardest Part Comes First</div>
+      <p>The Pinnacles route front-loads the difficulty — <strong>1,400 ft of gain in the first 2.8 miles</strong> at sustained 10% grade. Once you crest Pinnacles Pass, the trail eases considerably. Get the hard climbing done early while legs are fresh, and the reward of the rim walk feels earned.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#639922;"></span>The Rim Walk Is Effortless</div>
+      <p>The 1.5-mile rim traverse is nearly flat — it exists purely for the views. Walk it slowly. Stop often. The South Rim is one of the places in this park where you should put your phone away and just look. The descent via Laguna Meadow is gradual and forgiving compared to the ascent.</p>
+    </div>
+  </div>
+
+  <!-- Grade Distribution -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Grade Distribution — Full Loop</div>
+    <div class="bar-row"><span class="bar-label">Easy (&lt;5%)</span><div class="bar-track"><div class="bar-fill" style="width:22%;background:#639922;"></div></div><span class="bar-pct">22%</span></div>
+    <div class="bar-row"><span class="bar-label">Moderate (5–9%)</span><div class="bar-track"><div class="bar-fill" style="width:55%;background:#EF9F27;"></div></div><span class="bar-pct">55%</span></div>
+    <div class="bar-row" style="margin-bottom:0;"><span class="bar-label">Steep (9%+)</span><div class="bar-track"><div class="bar-fill" style="width:23%;background:#E24B4A;"></div></div><span class="bar-pct">23%</span></div>
+  </div>
+
+  <!-- All five trails comparison -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#993556;"></span>All Five Trails — At a Glance</div>
+    <div class="vs-row"><span class="vs-label">Distance</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:11%;background:#8dbf55;"></div><span class="vs-val">Santa Elena 1.6 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:34%;background:#639922;"></div><span class="vs-val">Lost Mine 4.8 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:40%;background:#EF9F27;"></div><span class="vs-val">The Window 5.6 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:71%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 10 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#993556;"></div><span class="vs-val">South Rim 12–14 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label">Elev. Gain</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:4%;background:#8dbf55;"></div><span class="vs-val">Santa Elena ~100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:32%;background:#639922;"></div><span class="vs-val">The Window ~800 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:45%;background:#EF9F27;"></div><span class="vs-val">Lost Mine 1,100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:86%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 2,470 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#993556;"></div><span class="vs-val">South Rim ~2,100 ft (loop)</span></div></div>
+    <!-- Recommended order: Pack 171 trip planning -->
+    <p class="vs-note">Recommended trip order: Lost Mine Day 1 (acclimate), Emory Peak Day 2–3 (summit), The Window (afternoon any day), Santa Elena (afternoon, drive required), South Rim last (capstone — save the best for when the group has their legs under them).</p>
+  </div>
+
+  <!-- Start time / logistics card: Pack 171 trip planning + NPS storm safety guidance -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Summit Timing — Oct 9–13</div>
+    <p>Depart the Basin trailhead by <strong>6:00 AM</strong>. Arrive the South Rim first overlook by 10:00–10:30 AM. Complete the rim traverse and begin the Laguna Meadow descent by <strong>1:00 PM</strong> at the latest — afternoon storms are the primary hazard at exposed rim elevation in October. Back at the Basin by 3:00–4:00 PM. Plan a hot dinner and early bedtime; this is the hardest day of the trip. The Basin store closes at 6 PM — shop before you hike if you need supplies for dinner.</p>
+  </div>
+</section>
+
+<!-- ── TRAIL NAV ── -->
+<div class="trail-nav">
+  <a class="trail-nav-link" href="../window-trail/">
+    <span class="trail-nav-dir">
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M9 4H1M4 1L1 4l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous Trail
+    </span>
+    <span class="trail-nav-name">The Window</span>
+  </a>
+  <a class="trail-nav-link next" href="../">
+    <span class="trail-nav-dir">
+      Back to
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M1 4h8M6 1l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="trail-nav-name">All Trails</span>
+  </a>
+</div>
+
+<footer>
+  Pack 171 · North Shore District · Capitol Area Council · BSA &nbsp;·&nbsp; Big Bend National Park, Texas
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+(function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a').forEach(a => {
+  a.addEventListener('mouseenter', () => { cursor.style.width='14px'; cursor.style.height='14px'; ring.style.width='50px'; ring.style.height='50px'; });
+  a.addEventListener('mouseleave', () => { cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='32px'; ring.style.height='32px'; });
+});
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [], W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize(); window.addEventListener('resize', resize);
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 260; i++) {
+    stars.push({ x: Math.random()*W, y: Math.random()*H*0.65, r: Math.random()*1.3+0.3, o: Math.random()*0.75+0.2, speed: Math.random()*0.4+0.05, phase: Math.random()*Math.PI*2 });
+  }
+}
+initStars();
+let t = 0;
+function drawStars() {
+  ctx.clearRect(0, 0, W, H); t += 0.008;
+  stars.forEach(s => {
+    const pulse = s.o + Math.sin(t*s.speed+s.phase)*0.15;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,248,231,${pulse})`; ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+window.addEventListener('scroll', () => {
+  canvas.style.transform = `translateY(${window.scrollY*0.12}px)`;
+});
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+Chart.defaults.color = 'rgba(255,248,231,0.4)';
+Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+
+// Elevation data: USGS DEM + AllTrails GPS track — South Rim Loop (Pinnacles up / Laguna Meadow down)
+// https://www.alltrails.com/trail/us/texas/south-rim-loop
+const srPts = [
+  {x:0,    y:5401},  // Basin trailhead
+  {x:2.8,  y:6800},  // Pinnacles Pass
+  {x:4.5,  y:7180},  // Emory Peak junction
+  {x:5.5,  y:7220},  // South Rim first overlook
+  {x:7.0,  y:7380},  // Southeast rim / Boot Canyon junction (high point)
+  {x:9.5,  y:6330},  // Laguna Meadow
+  {x:12.0, y:5401},  // Basin trailhead return
+];
+const srColors = ['#E24B4A','#639922','#EF9F27','#639922','#EF9F27','#EF9F27','#EF9F27'];
+
+new Chart(document.getElementById('srChart'), {
+  type: 'line',
+  data: {
+    datasets: [{
+      data: srPts.map(p => ({x: p.x, y: p.y})),
+      borderColor: '#378ADD', borderWidth: 2.5,
+      pointBackgroundColor: srColors, pointBorderColor: srColors,
+      pointRadius: 5, pointHoverRadius: 7,
+      fill: true, backgroundColor: 'rgba(55,138,221,0.07)', tension: 0.35
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(10,12,20,0.92)',
+        titleColor: '#E8C07A', bodyColor: 'rgba(255,248,231,0.7)',
+        borderColor: 'rgba(232,192,122,0.2)', borderWidth: 1,
+        callbacks: {
+          title: i => 'Mile ' + i[0].parsed.x.toFixed(1),
+          label: i => 'Elevation: ' + i.parsed.y.toLocaleString() + ' ft'
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'linear', min: 0, max: 12,
+        title: { display: true, text: 'miles (full loop)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { stepSize: 2, color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      },
+      y: {
+        min: 5000, max: 7600,
+        title: { display: true, text: 'elevation (ft)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { callback: v => v.toLocaleString(), color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
