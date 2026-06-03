@@ -466,21 +466,56 @@ footer {
     </a>
 
     <!-- Coming soon 1 -->
-    <div class="trail-card coming-soon">
-      <div class="coming-soon-label">Coming Soon</div>
+    <!-- Santa Elena Canyon -->
+    <a class="trail-card" href="./santa-elena/">
       <div class="trail-card-illustration">
         <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
-          <rect width="480" height="220" fill="#0e1520"/>
-          <path d="M0 160 L80 140 L200 110 L320 130 L420 115 L480 125 L480 220 L0 220Z" fill="#111926"/>
-          <path d="M0 190 L100 175 L240 165 L380 178 L480 170 L480 220 L0 220Z" fill="#0d1018"/>
-          <rect x="0" y="60" width="90" height="160" fill="#0a1016"/>
-          <rect x="390" y="80" width="90" height="140" fill="#0a1016"/>
-          <g fill="#FFF8E7" opacity="0.6"><circle cx="200" cy="20" r="0.8"/><circle cx="250" cy="35" r="1"/><circle cx="300" cy="15" r="0.7"/></g>
+          <defs>
+            <linearGradient id="sky-se-card" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#0d1525"/><stop offset="100%" stop-color="#1e2d44"/>
+            </linearGradient>
+            <linearGradient id="wall-l-card" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#1e0e04"/><stop offset="100%" stop-color="#3a1e0a"/>
+            </linearGradient>
+            <linearGradient id="wall-r-card" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#3e2010"/><stop offset="100%" stop-color="#1e0e04"/>
+            </linearGradient>
+            <radialGradient id="se-glow-card" cx="50%" cy="55%" r="30%">
+              <stop offset="0%" stop-color="#E8C07A" stop-opacity="0.5"/>
+              <stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <rect width="480" height="220" fill="url(#sky-se-card)"/>
+          <rect width="480" height="220" fill="url(#se-glow-card)"/>
+          <g fill="#FFF8E7">
+            <circle cx="210" cy="14" r="1.1" opacity="0.85"/>
+            <circle cx="240" cy="28" r="0.8" opacity="0.70"/>
+            <circle cx="270" cy="10" r="0.9" opacity="0.80"/>
+            <circle cx="225" cy="42" r="0.7" opacity="0.60"/>
+            <circle cx="255" cy="38" r="0.8" opacity="0.65"/>
+          </g>
+          <!-- Left canyon wall -->
+          <path d="M0 0 L0 220 L155 220 L155 185 L140 162 L148 132 L135 105 L142 75 L128 45 L136 18 L118 0Z" fill="url(#wall-l-card)"/>
+          <path d="M0 0 L22 0 L28 14 L45 5 L58 18 L75 4 L90 14 L105 0 L118 0 L128 45 L136 18 L142 75 L135 105 L148 132 L140 162 L155 185 L155 220 L0 220Z" fill="#150804"/>
+          <!-- Right canyon wall -->
+          <path d="M480 0 L480 220 L325 220 L325 185 L340 162 L332 132 L345 105 L338 75 L352 45 L344 18 L362 0Z" fill="url(#wall-r-card)"/>
+          <path d="M480 0 L458 0 L452 14 L435 5 L422 18 L405 4 L390 14 L375 0 L362 0 L352 45 L344 18 L338 75 L345 105 L332 132 L340 162 L325 185 L325 220 L480 220Z" fill="#1a0a02"/>
+          <!-- River -->
+          <path d="M155 190 Q200 180 240 178 Q280 180 325 190 L325 220 L155 220Z" fill="#1a3050"/>
+          <!-- River shimmer -->
+          <path d="M160 196 Q240 188 320 196" stroke="rgba(120,180,240,0.25)" stroke-width="1.5" fill="none"/>
+          <!-- Trail dashes -->
+          <path d="M10 215 Q60 205 120 195 Q145 190 160 188 Q200 182 240 180 Q280 182 320 188 Q335 190 360 195 Q420 205 470 215" stroke="rgba(232,192,122,0.4)" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+          <!-- Trailhead dot -->
+          <circle cx="10" cy="215" r="3" fill="rgba(232,192,122,0.8)"/>
+          <!-- Viewpoint dot -->
+          <circle cx="380" cy="192" r="2.5" fill="rgba(232,192,122,0.9)"/>
+          <circle cx="380" cy="192" r="5.5" fill="none" stroke="rgba(232,192,122,0.35)" stroke-width="1.2"/>
         </svg>
         <div class="trail-card-overlay"></div>
       </div>
       <div class="trail-card-body">
-        <div class="trail-card-tags"><span class="badge mod">Moderate</span></div>
+        <div class="trail-card-tags"><span class="badge mod">Moderate</span><span class="badge mod">Half Day</span></div>
         <h2 class="trail-card-name">Santa Elena<br>Canyon</h2>
         <!-- Tagline: NPS geology/canyon description; wall height from NPS Big Bend geology page -->
         <p class="trail-card-tagline">"1,500-foot limestone walls and the Rio Grande at your feet."</p>
@@ -490,7 +525,10 @@ footer {
           <div class="trail-stat"><span class="trail-stat-val">1–1.5 hr</span><span class="trail-stat-label">est. time</span></div>
         </div>
       </div>
-    </div>
+      <div class="trail-card-arrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </a>
 
     <!-- The Window Trail -->
     <a class="trail-card" href="./window-trail/">
@@ -515,6 +553,64 @@ footer {
           <div class="trail-stat"><span class="trail-stat-val">5.6 mi</span><span class="trail-stat-label">distance</span></div>
           <div class="trail-stat"><span class="trail-stat-val">800 ft</span><span class="trail-stat-label">gain</span></div>
           <div class="trail-stat"><span class="trail-stat-val">3–4 hr</span><span class="trail-stat-label">est. time</span></div>
+        </div>
+      </div>
+      <div class="trail-card-arrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="#E8C07A" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </div>
+    </a>
+    <!-- South Rim Loop -->
+    <a class="trail-card" href="./south-rim/">
+      <div class="trail-card-illustration">
+        <svg viewBox="0 0 480 220" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="sky-src-card" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#04060e"/><stop offset="100%" stop-color="#0e1628"/>
+            </linearGradient>
+            <radialGradient id="milky-src-card" cx="50%" cy="30%" r="55%">
+              <stop offset="0%" stop-color="rgba(100,120,200,0.09)"/><stop offset="100%" stop-color="transparent"/>
+            </radialGradient>
+          </defs>
+          <rect width="480" height="220" fill="url(#sky-src-card)"/>
+          <rect width="480" height="220" fill="url(#milky-src-card)"/>
+          <path d="M0 40 Q120 28 240 42 Q360 55 480 36" stroke="rgba(140,165,255,0.05)" stroke-width="18" fill="none"/>
+          <g fill="#FFF8E7">
+            <circle cx="30" cy="12" r="1.3" opacity="0.95"/>
+            <circle cx="80" cy="26" r="1.0" opacity="0.88"/>
+            <circle cx="135" cy="10" r="1.2" opacity="0.92"/>
+            <circle cx="188" cy="28" r="0.9" opacity="0.80"/>
+            <circle cx="242" cy="15" r="1.2" opacity="0.90"/>
+            <circle cx="295" cy="8" r="1.0" opacity="0.85"/>
+            <circle cx="348" cy="22" r="1.3" opacity="0.93"/>
+            <circle cx="402" cy="12" r="1.0" opacity="0.87"/>
+            <circle cx="452" cy="28" r="1.2" opacity="0.91"/>
+            <circle cx="55" cy="46" r="0.8" opacity="0.72"/>
+            <circle cx="165" cy="42" r="0.7" opacity="0.65"/>
+            <circle cx="275" cy="44" r="1.0" opacity="0.80"/>
+            <circle cx="385" cy="40" r="0.7" opacity="0.65"/>
+            <circle cx="440" cy="52" r="0.9" opacity="0.76"/>
+          </g>
+          <path d="M0 140 L60 126 L120 134 L180 118 L240 128 L300 114 L360 124 L420 112 L480 122 L480 220 L0 220Z" fill="#120b04"/>
+          <path d="M0 155 L480 155 L480 220 L0 220Z" fill="#1a0e06"/>
+          <path d="M0 88 L40 76 L90 82 L140 68 L190 76 L240 62 L290 70 L340 64 L390 72 L440 66 L480 74 L480 100 L440 96 L390 92 L340 88 L290 92 L240 86 L190 92 L140 88 L90 96 L40 100 L0 104Z" fill="#2a1808"/>
+          <path d="M0 88 L40 76 L90 82 L140 68 L190 76 L240 62 L290 70 L340 64 L390 72 L440 66 L480 74" stroke="rgba(232,192,122,0.2)" stroke-width="1.5" fill="none"/>
+          <path d="M0 104 L480 104 L480 220 L0 220Z" fill="#1a1008"/>
+          <path d="M50 208 Q75 188 90 165 Q104 145 108 112 Q160 74 240 64 Q320 74 372 112 Q376 145 390 165 Q405 188 430 208" stroke="rgba(232,192,122,0.38)" stroke-width="1.5" fill="none" stroke-dasharray="4,3"/>
+          <circle cx="240" cy="64" r="3" fill="rgba(232,192,122,0.92)"/>
+          <circle cx="240" cy="64" r="6.5" fill="none" stroke="rgba(232,192,122,0.38)" stroke-width="1.2"/>
+          <circle cx="50" cy="208" r="3" fill="rgba(232,192,122,0.7)"/>
+        </svg>
+        <div class="trail-card-overlay"></div>
+      </div>
+      <div class="trail-card-body">
+        <div class="trail-card-tags"><span class="badge str">Strenuous</span><span class="badge str">Full Day</span></div>
+        <h2 class="trail-card-name">South Rim<br>Loop</h2>
+        <!-- Tagline: Pack 171 editorial; rim views consistent with NPS interpretive materials -->
+        <p class="trail-card-tagline">"Stand on the edge of the Chisos and look straight down 2,000 feet into Mexico."</p>
+        <div class="trail-stats">
+          <div class="trail-stat"><span class="trail-stat-val">12–14 mi</span><span class="trail-stat-label">distance</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">2,100 ft</span><span class="trail-stat-label">gain</span></div>
+          <div class="trail-stat"><span class="trail-stat-val">7–9 hr</span><span class="trail-stat-label">est. time</span></div>
         </div>
       </div>
       <div class="trail-card-arrow">
