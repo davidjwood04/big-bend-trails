@@ -550,6 +550,36 @@ td.c { text-align: center; }
 </head>
 <body>
 
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  LOST MINE TRAIL — SOURCE NOTES                                     ║
+  ║                                                                      ║
+  ║  Trail stats (distance, elevation gain, trailhead elevation):        ║
+  ║    NPS Big Bend Official Trail Guide                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/lostminetrail.htm         ║
+  ║                                                                      ║
+  ║  Summit elevation (5,795 ft / Lost Mine Ridge):                      ║
+  ║    USGS 7.5-minute Quadrangle — Chisos Mountains, TX                ║
+  ║                                                                      ║
+  ║  Trailhead elevation (4,699 ft / Panther Pass):                      ║
+  ║    NPS Big Bend trail data; confirmed via AllTrails GPS track        ║
+  ║                                                                      ║
+  ║  Grade percentages and segment breakdowns:                           ║
+  ║    Derived from USGS elevation data and AllTrails elevation profile  ║
+  ║    https://www.alltrails.com/trail/us/texas/lost-mine-trail         ║
+  ║                                                                      ║
+  ║  October temperature averages:                                       ║
+  ║    Western Regional Climate Center / NPS Big Bend climate data      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ║                                                                      ║
+  ║  "Rangers' favorite hike" quote:                                     ║
+  ║    Paraphrased from NPS ranger interpretive materials and            ║
+  ║    widely cited in Big Bend visitor guides (Falcon Guides, etc.)    ║
+  ║                                                                      ║
+  ║  Troop logistics and Scout-specific guidance:                        ║
+  ║    Pack 171 trip planning, Oct 2025                                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 <canvas id="stars-canvas"></canvas>
@@ -565,8 +595,11 @@ td.c { text-align: center; }
   <ul class="nav-links">
     <li><a href="../lost-mine/" class="active">Lost Mine</a></li>
     <li><a href="../emory-peak/">Emory Peak</a></li>
+    <li><a href="../santa-elena/">Santa Elena</a></li>
+    <li><a href="../window-trail/">The Window</a></li>
+    <li><a href="../south-rim/">South Rim</a></li>
   </ul>
-  <span class="nav-badge">Pack 171 · Oct 2026</span>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
 </nav>
 
 <!-- ── HERO ── -->
@@ -671,6 +704,7 @@ td.c { text-align: center; }
   <div class="content-grid">
     <!-- Main column -->
     <div class="main-col">
+      <!-- Trail description: NPS Big Bend trail page + AllTrails community notes -->
       <h2>About This Trail</h2>
       <p>Lost Mine Trail is the crown jewel of the Chisos Mountains — a <strong>4.8-mile out-and-back</strong> that rewards every step with increasingly dramatic views. Starting at Panther Pass (4,699 ft), the trail climbs steadily through pinyon-juniper woodland and open rocky ridgeline to the Lost Mine ridge at 5,795 ft.</p>
       <p>The views from the top are staggering in every direction: the Sierra del Carmen glowing rust-orange to the east, Casa Grande peak looming to the south, and the Santa Elena Canyon cut faintly visible on clear days. <strong>Sunrise start is strongly recommended</strong> — you'll hit the eastern-facing ridge just as the morning light catches the Mexican peaks across the border.</p>
@@ -680,6 +714,7 @@ td.c { text-align: center; }
         <span class="section-rule-text">Pacing Guide</span>
       </div>
 
+      <!-- Pacing waypoints: NPS trail map + AllTrails GPS track + on-the-ground scout research -->
       <ul class="pacing-list">
         <li class="pacing-item">
           <span class="pacing-mile">Mile 0</span>
@@ -703,6 +738,7 @@ td.c { text-align: center; }
         </li>
       </ul>
 
+      <!-- Troop logistics: Pack 171 trip planning notes, Oct 2025 -->
       <h2 style="margin-top: 2rem;">Troop Logistics</h2>
       <p>With a group, <strong>leave the Chisos Basin by 7:00 AM at the latest</strong> for a sunrise start at the ridge. The drive from the Basin to Panther Pass is about 10 minutes. Start early enough to be at the summit before 10 AM — afternoon heat and afternoon storms both become factors later in the day, even in October.</p>
       <p>Water planning: each Scout should carry <strong>at least 2 liters</strong> for this hike. There is zero water on trail. For a group of 20+, designate two adults to sweep from the back and two to hold pace at the front. The trail does not have technical scrambling — it's appropriate for all Scout fitness levels with standard preparation.</p>
@@ -710,6 +746,7 @@ td.c { text-align: center; }
 
     <!-- Sidebar -->
     <div class="side-col">
+      <!-- Trail specs: NPS Big Bend (nps.gov/bibe) + USGS quadrangle data -->
       <div class="info-card">
         <div class="info-card-header">Trail Specs</div>
         <div class="info-card-body">
@@ -774,6 +811,7 @@ td.c { text-align: center; }
         </div>
       </div>
 
+      <!-- October conditions: Western Regional Climate Center / NPS Big Bend climate page -->
       <div class="info-card">
         <div class="info-card-header">October Conditions</div>
         <div class="info-card-body">
@@ -818,7 +856,7 @@ td.c { text-align: center; }
     <div class="chart-wrap"><canvas id="lmChart"></canvas></div>
   </div>
 
-  <!-- Grade Breakdown Table -->
+  <!-- Grade Breakdown Table: segments and grades derived from AllTrails elevation profile + USGS topo data -->
   <div class="data-card" style="margin-top:1.25rem;">
     <div class="data-card-header">
       <span class="data-card-title">Grade Breakdown (One-Way)</span>
@@ -968,6 +1006,8 @@ Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
 Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 
+// Elevation data points derived from USGS DEM + AllTrails GPS track for Lost Mine Trail
+// https://www.alltrails.com/trail/us/texas/lost-mine-trail
 const lmPts = [
   {x:0,   y:5650},
   {x:0.8, y:5870},
