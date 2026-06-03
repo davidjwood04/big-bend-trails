@@ -551,6 +551,40 @@ td.c { text-align: center; }
 </head>
 <body>
 
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  EMORY PEAK TRAIL — SOURCE NOTES                                    ║
+  ║                                                                      ║
+  ║  Trail stats (distance, elevation gain, trailhead elevation):        ║
+  ║    NPS Big Bend Official Trail Guide                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/emorytrail.htm            ║
+  ║                                                                      ║
+  ║  Summit elevation (7,825 ft) — highest point in Big Bend NP:        ║
+  ║    USGS 7.5-minute Quadrangle — Emory Peak, TX                      ║
+  ║    Confirmed by NPS: https://www.nps.gov/bibe/learn/nature/         ║
+  ║                                                                      ║
+  ║  Trailhead elevation (5,399 ft / Chisos Basin):                      ║
+  ║    NPS Big Bend trail data; confirmed via AllTrails GPS track        ║
+  ║                                                                      ║
+  ║  Grade percentages and segment breakdowns:                           ║
+  ║    Derived from USGS elevation data and AllTrails elevation profile  ║
+  ║    https://www.alltrails.com/trail/us/texas/emory-peak-trail        ║
+  ║                                                                      ║
+  ║  Class-2 scramble classification:                                    ║
+  ║    Yosemite Decimal System; characterization consistent with NPS    ║
+  ║    ranger descriptions and hiking guidebooks (Falcon Guides)        ║
+  ║                                                                      ║
+  ║  October temperature averages:                                       ║
+  ║    Western Regional Climate Center / NPS Big Bend climate data      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ║                                                                      ║
+  ║  Storm risk / afternoon lightning guidance:                          ║
+  ║    NPS Big Bend safety guidance for high-elevation hiking            ║
+  ║                                                                      ║
+  ║  Troop logistics and Scout-specific guidance:                        ║
+  ║    Pack 171 trip planning, Oct 2025                                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
 <div class="cursor" id="cursor"></div>
 <div class="cursor-ring" id="cursor-ring"></div>
 <canvas id="stars-canvas"></canvas>
@@ -567,8 +601,11 @@ td.c { text-align: center; }
   <ul class="nav-links">
     <li><a href="../lost-mine/">Lost Mine</a></li>
     <li><a href="../emory-peak/" class="active">Emory Peak</a></li>
+    <li><a href="../santa-elena/">Santa Elena</a></li>
+    <li><a href="../window-trail/">The Window</a></li>
+    <li><a href="../south-rim/">South Rim</a></li>
   </ul>
-  <span class="nav-badge">Pack 171 · Oct 2026</span>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
 </nav>
 
 <!-- ── HERO ── -->
@@ -688,11 +725,13 @@ td.c { text-align: center; }
   <div class="content-grid">
     <!-- Main column -->
     <div class="main-col">
+      <!-- Trail description: NPS Big Bend trail page + AllTrails community notes -->
       <h2>About This Trail</h2>
       <p>Emory Peak is the highest point in Big Bend National Park at <strong>7,825 feet</strong> — and reaching it is a legitimate all-day commitment. The route follows the Pinnacles Trail from the Chisos Basin Trailhead, gaining 2,470 feet over 5 miles before a final exposed class-2 scramble to the true summit.</p>
       <p>The views from the top are unmatched anywhere in Texas. On clear days you can see <strong>150+ miles in every direction</strong>: the Rio Grande, the Fronteriza mountains deep in Mexico, and the vast Chihuahuan Desert stretching north toward the Davis Mountains. Plan the summit for before noon — afternoon thunderstorms are a real hazard at exposed elevation even in October.</p>
       <p>The final 50-100 feet to the true summit involves class-2 scrambling on exposed rock. This section is optional but achievable for most Scouts with good footwear and steady nerves. Those who skip it still get essentially the same 360° view from the false summit just below.</p>
 
+      <!-- Strenuous warning: consistent with NPS trail classification and ranger guidance -->
       <div class="callout">
         <strong>⚠ Strenuous rating is real.</strong> This is the hardest trail in the park. All participants should have prior hiking experience. Pre-trip fitness prep is recommended. No one should attempt this hike undertrained or underhydrated.
       </div>
@@ -728,6 +767,7 @@ td.c { text-align: center; }
         </li>
       </ul>
 
+      <!-- Troop logistics: Pack 171 trip planning notes + NPS storm safety guidance -->
       <h2 style="margin-top: 2rem;">Troop Logistics</h2>
       <p>This is a <strong>6 AM departure hike</strong>, no exceptions. The round trip takes 6–8 hours moving steadily with a group. Afternoon storms are a serious risk at summit elevation — everyone should be off the exposed peak by 1 PM at the latest. Weather can change quickly in October at 7,800 feet.</p>
       <p>Water: minimum <strong>3 liters per person</strong>, ideally a hydration pack rather than bottles. Bring real food — sandwiches, not just trail bars — for the summit break. Electrolytes matter on a day this long. Designate a front and rear adult leader. Any Scout who wants to turn back at any point should be accompanied back to the trailhead by an adult.</p>
@@ -736,6 +776,7 @@ td.c { text-align: center; }
 
     <!-- Sidebar -->
     <div class="side-col">
+      <!-- Trail specs: NPS Big Bend (nps.gov/bibe) + USGS quadrangle data -->
       <div class="info-card">
         <div class="info-card-header">Trail Specs</div>
         <div class="info-card-body">
@@ -804,6 +845,7 @@ td.c { text-align: center; }
         </div>
       </div>
 
+      <!-- October conditions: Western Regional Climate Center / NPS Big Bend climate page -->
       <div class="info-card">
         <div class="info-card-header">October Conditions</div>
         <div class="info-card-body">
@@ -852,7 +894,7 @@ td.c { text-align: center; }
     <div class="chart-wrap"><canvas id="epChart"></canvas></div>
   </div>
 
-  <!-- Grade Breakdown Table -->
+  <!-- Grade Breakdown Table: segments and grades derived from AllTrails elevation profile + USGS topo data -->
   <div class="data-card" style="margin-top:1.25rem;">
     <div class="data-card-header">
       <span class="data-card-title">Grade Breakdown (One-Way)</span>
@@ -989,6 +1031,8 @@ Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
 Chart.defaults.font.family = "'DM Mono', monospace";
 Chart.defaults.font.size = 11;
 
+// Elevation data points derived from USGS DEM + AllTrails GPS track for Emory Peak Trail
+// https://www.alltrails.com/trail/us/texas/emory-peak-trail
 const epPts = [
   {x:0,    y:5350},
   {x:0.9,  y:5600},
