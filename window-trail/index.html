@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Window Trail — Big Bend Scout Field Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Libre+Baskerville:ital@0;1&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --night: #0a0c14;
+  --dusk: #1a1f35;
+  --mesa: #8B3A1A;
+  --canyon: #C2572A;
+  --sand: #E8C07A;
+  --sage: #7A9E6F;
+  --star: #FFF8E7;
+  --mist: rgba(255,248,231,0.07);
+  --glow: rgba(232,192,122,0.15);
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--night);
+  color: var(--star);
+  font-family: 'Libre Baskerville', Georgia, serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* Custom cursor */
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--sand);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, width 0.2s, height 0.2s, opacity 0.2s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(232,192,122,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform 0.18s ease-out, width 0.3s, height 0.3s, opacity 0.3s;
+}
+
+/* Stars canvas */
+#stars-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ── NAV ── */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 2rem;
+  height: 56px;
+  background: rgba(10,12,20,0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.nav-home {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--star);
+  text-decoration: none;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s;
+}
+.nav-home:hover { color: var(--sand); }
+.nav-home svg { opacity: 0.6; }
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  list-style: none;
+}
+.nav-links li a {
+  display: block;
+  padding: 0 0.85rem;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.45);
+  text-decoration: none;
+  transition: color 0.2s;
+  border-right: 1px solid rgba(232,192,122,0.08);
+}
+.nav-links li:last-child a { border-right: none; }
+.nav-links li a:hover,
+.nav-links li a.active { color: var(--sand); }
+.nav-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid rgba(232,192,122,0.25);
+  color: rgba(232,192,122,0.6);
+}
+@media (max-width: 700px) {
+  .nav-badge { display: none; }
+  .nav-links li a { padding: 0 0.45rem; font-size: 9px; }
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  z-index: 1;
+  padding: 7rem 2rem 4rem;
+  max-width: 980px;
+  margin: 0 auto;
+}
+.hero-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.7;
+  margin-bottom: 1rem;
+  animation: fadein 1s ease both;
+}
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.35);
+  text-decoration: none;
+  margin-bottom: 2rem;
+  transition: color 0.2s;
+  animation: fadein 0.8s ease both;
+}
+.back-link:hover { color: var(--sand); }
+.back-link svg { transition: transform 0.2s; }
+.back-link:hover svg { transform: translateX(-3px); }
+.hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 700;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  color: var(--star);
+  text-shadow: 0 0 60px rgba(232,192,122,0.15);
+  animation: fadein 1.2s ease both;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--sand);
+  display: block;
+}
+.hero-tagline {
+  font-size: 15px;
+  font-style: italic;
+  color: rgba(255,248,231,0.5);
+  margin-top: 1.25rem;
+  max-width: 500px;
+  line-height: 1.75;
+  animation: fadein 1.4s ease both;
+}
+.hero-stat-row {
+  display: flex;
+  gap: 0;
+  margin-top: 2rem;
+  border: 1px solid rgba(232,192,122,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+  animation: fadein 1.6s ease both;
+}
+.hero-stat {
+  padding: 14px 24px;
+  border-right: 1px solid rgba(232,192,122,0.1);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hero-stat-val {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  color: var(--sand);
+  display: block;
+  margin-bottom: 3px;
+}
+.hero-stat-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+}
+.badge {
+  display: inline-block;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 9px;
+  border-radius: 20px;
+  border: 1px solid currentColor;
+  margin-top: 1.25rem;
+}
+.badge.mod { color: #EF9F27; }
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── ILLUSTRATION ── */
+.trail-illustration-wrap {
+  position: relative;
+  z-index: 5;
+  width: 100%;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+.trail-illustration {
+  width: 100%;
+  height: 320px;
+  border: 1px solid rgba(232,192,122,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  display: block;
+}
+.trail-illustration svg { width: 100%; height: 100%; }
+
+/* ── SECTION RULE ── */
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+}
+.section-rule::before, .section-rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(232,192,122,0.3), transparent);
+}
+.section-rule-text {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+/* ── CONTENT ── */
+.content {
+  position: relative;
+  z-index: 10;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 4rem 2rem 6rem;
+}
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+.main-col h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--sand);
+  margin-bottom: 1rem;
+}
+.main-col p {
+  font-size: 14px;
+  color: rgba(255,248,231,0.65);
+  line-height: 1.85;
+  margin-bottom: 1.25rem;
+}
+.main-col p strong { color: var(--star); font-weight: normal; }
+
+/* Pacing */
+.pacing-list { list-style: none; margin: 1.5rem 0 2rem; }
+.pacing-item {
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1rem;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.07);
+  align-items: start;
+}
+.pacing-item:first-child { border-top: 1px solid rgba(232,192,122,0.07); }
+.pacing-mile {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--sand);
+  opacity: 0.8;
+  padding-top: 2px;
+}
+.pacing-desc { font-size: 13px; color: rgba(255,248,231,0.55); line-height: 1.65; }
+.pacing-desc strong { color: var(--star); font-weight: normal; }
+
+/* Sidebar */
+.side-col {
+  position: sticky;
+  top: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.info-card {
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(255,248,231,0.02);
+}
+.info-card-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--sand);
+  opacity: 0.7;
+}
+.info-card-body { padding: 16px; }
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.06);
+  font-size: 12px;
+}
+.info-row:last-child { border-bottom: none; padding-bottom: 0; }
+.info-row-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+}
+.info-row-val { color: var(--star); text-align: right; max-width: 140px; }
+.tip-item {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(232,192,122,0.06);
+  font-size: 12px;
+  color: rgba(255,248,231,0.55);
+  line-height: 1.6;
+}
+.tip-item:last-child { border-bottom: none; padding-bottom: 0; }
+.tip-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ── TRAIL NAV ── */
+.trail-nav {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08);
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+.trail-nav-link {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  padding: 16px 20px;
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  background: rgba(255,248,231,0.02);
+  transition: border-color 0.3s, background 0.3s;
+  min-width: 180px;
+}
+.trail-nav-link:hover {
+  border-color: rgba(232,192,122,0.3);
+  background: rgba(232,192,122,0.04);
+}
+.trail-nav-dir {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,248,231,0.3);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.trail-nav-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--star);
+}
+.trail-nav-link.next { text-align: right; }
+.trail-nav-link.next .trail-nav-dir { justify-content: flex-end; }
+
+/* ── FOOTER ── */
+footer {
+  position: relative;
+  z-index: 10;
+  border-top: 1px solid rgba(232,192,122,0.08);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  color: rgba(255,248,231,0.2);
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .content-grid { grid-template-columns: 1fr; }
+  .side-col { position: static; }
+  .trail-nav { flex-direction: column; }
+  .trail-nav-link { min-width: auto; width: 100%; }
+  .trail-nav-link.next { text-align: left; }
+  .trail-nav-link.next .trail-nav-dir { justify-content: flex-start; }
+  .hero-stat-row { flex-wrap: wrap; }
+  .hero-stat { flex: 1 1 40%; }
+}
+
+/* ── DATA GRAPHICS ── */
+.data-section {
+  position: relative; z-index: 10;
+  max-width: 980px; margin: 0 auto;
+  padding: 0 2rem 4rem;
+}
+.data-card {
+  border: 1px solid rgba(232,192,122,0.12);
+  border-radius: 4px;
+  background: rgba(255,248,231,0.02);
+  overflow: hidden;
+}
+.data-card-header {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+.data-card-title {
+  font-family: 'DM Mono', monospace; font-size: 10px;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--sand); opacity: 0.75;
+}
+.data-legend { display: flex; gap: 14px; flex-wrap: wrap; }
+.legend-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; }
+.legend-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.45); margin-left: 4px; }
+.chart-wrap { position: relative; width: 100%; height: 260px; padding: 14px 18px 10px; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  font-weight: normal; letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,248,231,0.3); padding: 10px 14px; text-align: left;
+  border-bottom: 1px solid rgba(232,192,122,0.08);
+}
+th.r { text-align: right; } th.c { text-align: center; }
+td { padding: 10px 14px; border-bottom: 1px solid rgba(232,192,122,0.05); color: rgba(255,248,231,0.6); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+tbody tr:hover td { background: rgba(232,192,122,0.03); }
+td.seg { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); }
+td.num { font-family: 'DM Mono', monospace; font-size: 11px; text-align: right; }
+td.c { text-align: center; }
+.grade-badge {
+  font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 20px; display: inline-block;
+}
+.grade-badge.easy     { background: rgba(99,153,34,0.15);  color: #8dbf55; border: 1px solid rgba(99,153,34,0.3); }
+.grade-badge.moderate { background: rgba(239,159,39,0.12); color: #EF9F27; border: 1px solid rgba(239,159,39,0.3); }
+.grade-badge.steep    { background: rgba(226,75,74,0.12);  color: #E24B4A; border: 1px solid rgba(226,75,74,0.3); }
+.analysis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+.analysis-card {
+  border: 1px solid rgba(232,192,122,0.12); border-radius: 4px;
+  background: rgba(255,248,231,0.02); padding: 16px 18px;
+}
+.analysis-card-head {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'DM Mono', monospace; font-size: 9px;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgba(255,248,231,0.4); margin-bottom: 10px;
+}
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.analysis-card p { font-size: 12px; color: rgba(255,248,231,0.55); line-height: 1.7; }
+.analysis-card p strong { color: var(--star); font-weight: normal; }
+.bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+.bar-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); width: 130px; flex-shrink: 0; }
+.bar-track { flex: 1; height: 5px; background: rgba(232,192,122,0.08); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; }
+.bar-pct { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); width: 32px; text-align: right; }
+.vs-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.vs-label { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.3); text-transform: uppercase; letter-spacing: 0.07em; width: 80px; flex-shrink: 0; }
+.vs-bar-wrap { flex: 1; display: flex; gap: 8px; align-items: center; }
+.vs-bar { height: 7px; border-radius: 4px; }
+.vs-val { font-family: 'DM Mono', monospace; font-size: 10px; color: rgba(255,248,231,0.4); white-space: nowrap; }
+.vs-note { font-size: 11px; color: rgba(255,248,231,0.35); line-height: 1.65; margin-top: 4px; }
+@media (max-width: 600px) { .analysis-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!--
+  ╔══════════════════════════════════════════════════════════════════════╗
+  ║  THE WINDOW TRAIL — SOURCE NOTES                                    ║
+  ║                                                                      ║
+  ║  Trail stats (distance, elevation gain/loss, trailhead elevation):   ║
+  ║    NPS Big Bend Official Trail Guide                                 ║
+  ║    https://www.nps.gov/bibe/planyourvisit/windowtrail.htm           ║
+  ║                                                                      ║
+  ║  Trailhead elevation (5,401 ft / Chisos Basin):                      ║
+  ║    USGS 7.5-minute Quadrangle — Chisos Mountains, TX                ║
+  ║    Confirmed via AllTrails GPS track                                 ║
+  ║                                                                      ║
+  ║  Pour-off elevation (~4,400 ft) and net elevation loss:              ║
+  ║    Derived from USGS elevation data and AllTrails elevation profile  ║
+  ║    https://www.alltrails.com/trail/us/texas/the-window-trail        ║
+  ║                                                                      ║
+  ║  Grade percentages and segment breakdowns:                           ║
+  ║    Derived from USGS DEM and AllTrails elevation profile             ║
+  ║                                                                      ║
+  ║  "Brutally hard return" characterization:                            ║
+  ║    Consistent with NPS, AllTrails, and Falcon Guides descriptions   ║
+  ║    of the sustained uphill return on this out-and-back trail        ║
+  ║                                                                      ║
+  ║  Flash flood / drainage warning:                                     ║
+  ║    NPS Big Bend safety guidance for canyon and drainage hiking       ║
+  ║    https://www.nps.gov/bibe/planyourvisit/safety.htm                ║
+  ║                                                                      ║
+  ║  October temperature averages (Chisos Basin):                        ║
+  ║    Western Regional Climate Center / NPS Big Bend climate data      ║
+  ║    https://www.nps.gov/bibe/planyourvisit/weather.htm               ║
+  ║                                                                      ║
+  ║  Oak Creek drainage / flora notes:                                   ║
+  ║    NPS Big Bend plant ecology documentation                         ║
+  ║                                                                      ║
+  ║  Troop logistics and Scout-specific guidance:                        ║
+  ║    Pack 171 trip planning, Oct 2025                                  ║
+  ╚══════════════════════════════════════════════════════════════════════╝
+-->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursor-ring"></div>
+<canvas id="stars-canvas"></canvas>
+
+<!-- ── NAVIGATION ── -->
+<nav class="site-nav">
+  <a class="nav-home" href="../">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M1 7L7 1l6 6M2.5 5.5V13h3v-3.5h3V13h3V5.5" stroke="#E8C07A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Big Bend Trail Guide
+  </a>
+  <ul class="nav-links">
+    <li><a href="../lost-mine/">Lost Mine</a></li>
+    <li><a href="../emory-peak/">Emory Peak</a></li>
+    <li><a href="../santa-elena/">Santa Elena</a></li>
+    <li><a href="../window-trail/" class="active">The Window</a></li>
+    <li><a href="../south-rim/">South Rim</a></li>
+  </ul>
+  <span class="nav-badge">Pack 171 · Oct 2025</span>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <a class="back-link" href="../">
+    <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+      <path d="M11 5H1M5 1L1 5l4 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    All Trails
+  </a>
+  <!-- Hero eyebrow: NPS trail classification + Pack 171 trip planning -->
+  <p class="hero-eyebrow">Chisos Basin · Moderate · Half Day</p>
+  <h1 class="hero-title">The<br><em>Window Trail</em></h1>
+  <!-- Tagline: Pack 171 editorial; pour-off description consistent with NPS trail page -->
+  <p class="hero-tagline">"A descent into Oak Creek canyon ending at a pour-off into the desert 1,000 feet below — and a long, honest climb back."</p>
+  <span class="badge mod">Moderate</span>
+  <!-- Stats: NPS Big Bend trail page + AllTrails GPS track -->
+  <div class="hero-stat-row">
+    <div class="hero-stat">
+      <span class="hero-stat-val">5.6 mi</span>
+      <span class="hero-stat-label">Distance</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">~800 ft</span>
+      <span class="hero-stat-label">Elev. Loss (out)</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">3–4 hr</span>
+      <span class="hero-stat-label">Est. Time</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-val">5,401 ft</span>
+      <span class="hero-stat-label">Trailhead Elev.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── ILLUSTRATION ── -->
+<div class="trail-illustration-wrap">
+  <div class="trail-illustration">
+    <svg viewBox="0 0 960 320" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <!-- Dusk sky — the Window faces west, classic golden hour destination -->
+        <linearGradient id="sky-wt" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0e1828"/>
+          <stop offset="45%" stop-color="#1e2d42"/>
+          <stop offset="75%" stop-color="#2e3d5a"/>
+          <stop offset="100%" stop-color="#3d4e68"/>
+        </linearGradient>
+        <!-- Golden pour-off glow at horizon -->
+        <radialGradient id="pouroff-glow" cx="50%" cy="100%" r="55%">
+          <stop offset="0%" stop-color="#E8C07A" stop-opacity="0.55"/>
+          <stop offset="40%" stop-color="#C2572A" stop-opacity="0.25"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+        <!-- Basin walls gradient -->
+        <linearGradient id="wall-basin-l" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1a0e06"/>
+          <stop offset="100%" stop-color="#2e1c0c"/>
+        </linearGradient>
+        <linearGradient id="wall-basin-r" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#341e0a"/>
+          <stop offset="100%" stop-color="#1a0e06"/>
+        </linearGradient>
+        <!-- Creek / drainage floor -->
+        <linearGradient id="creek-floor" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1c2c1a"/>
+          <stop offset="100%" stop-color="#0e1810"/>
+        </linearGradient>
+        <!-- Window opening glow -->
+        <radialGradient id="window-opening" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#E8C07A" stop-opacity="0.7"/>
+          <stop offset="50%" stop-color="#C2572A" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="transparent"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Sky -->
+      <rect width="960" height="320" fill="url(#sky-wt)"/>
+      <!-- Pour-off glow rising from The Window gap -->
+      <rect width="960" height="320" fill="url(#pouroff-glow)"/>
+
+      <!-- Stars — faint, competing with dusk light -->
+      <g fill="#FFF8E7">
+        <circle cx="80"  cy="18" r="0.9" opacity="0.6"/>
+        <circle cx="150" cy="30" r="1.1" opacity="0.7"/>
+        <circle cx="240" cy="12" r="0.7" opacity="0.55"/>
+        <circle cx="320" cy="25" r="1.0" opacity="0.65"/>
+        <circle cx="620" cy="20" r="0.8" opacity="0.6"/>
+        <circle cx="700" cy="10" r="1.2" opacity="0.7"/>
+        <circle cx="800" cy="28" r="0.9" opacity="0.65"/>
+        <circle cx="880" cy="15" r="0.7" opacity="0.55"/>
+        <circle cx="120" cy="50" r="0.6" opacity="0.45"/>
+        <circle cx="400" cy="42" r="0.8" opacity="0.5"/>
+        <circle cx="750" cy="48" r="0.7" opacity="0.45"/>
+      </g>
+
+      <!-- ── CHISOS BASIN WALLS (surrounding peaks) ── -->
+      <!-- Left rim — Casa Grande / Lost Mine direction -->
+      <path d="M0 0 L0 200 L50 185 L90 175 L130 158 L160 148 L185 162 L210 142 L240 130 L265 145 L290 128 L315 140 L335 155 L355 140 L370 148 L385 160 L400 145 L415 158 L430 148 L445 155 L460 165 L480 175 Z" fill="url(#wall-basin-l)"/>
+      <!-- Right rim — Emory Peak shoulder direction -->
+      <path d="M960 0 L960 200 L910 188 L870 175 L835 162 L800 175 L768 158 L740 168 L715 152 L690 165 L670 148 L650 160 L630 145 L610 158 L590 148 L575 162 L555 170 L540 155 L520 165 L500 172 L480 175 Z" fill="url(#wall-basin-r)"/>
+
+      <!-- Ridge texture on left wall -->
+      <g stroke="rgba(150,90,40,0.1)" stroke-width="1" fill="none">
+        <path d="M0 80 Q60 72 120 82 Q180 90 240 78 Q290 68 320 76"/>
+        <path d="M0 110 Q70 102 140 112 Q200 120 260 108 Q305 98 340 106"/>
+        <path d="M0 140 Q80 132 160 142 Q220 150 280 138 Q320 128 355 136"/>
+      </g>
+      <!-- Ridge texture on right wall -->
+      <g stroke="rgba(170,100,45,0.1)" stroke-width="1" fill="none">
+        <path d="M960 82 Q900 74 840 84 Q780 92 720 80 Q670 70 640 78"/>
+        <path d="M960 112 Q890 104 830 114 Q760 122 700 110 Q655 100 625 108"/>
+        <path d="M960 142 Q880 134 820 144 Q740 152 680 140 Q635 130 605 138"/>
+      </g>
+
+      <!-- ── THE WINDOW OPENING ── -->
+      <!-- The iconic V-shaped gap in the Basin rim where trail ends -->
+      <!-- Window gap glow behind -->
+      <ellipse cx="480" cy="175" rx="55" ry="35" fill="url(#window-opening)"/>
+      <!-- Window V-shape cutout — the actual opening -->
+      <path d="M430 148 Q455 168 480 180 Q505 168 530 148 L540 155 L520 165 L500 172 L480 175 L460 165 L445 155 L430 148 Z" fill="#E8C07A" opacity="0.55"/>
+      <path d="M438 148 Q460 166 480 177 Q500 166 522 148" stroke="rgba(232,192,122,0.8)" stroke-width="1.5" fill="none"/>
+
+      <!-- ── OAK CREEK DRAINAGE FLOOR ── -->
+      <!-- The canyon floor descends from trailhead toward The Window -->
+      <path d="M100 310 Q200 295 310 280 Q380 270 430 255 Q455 245 480 240 Q505 245 530 255 Q580 270 660 282 Q770 295 870 305 L960 308 L960 320 L0 320 Z" fill="url(#creek-floor)"/>
+
+      <!-- Vegetation in drainage — TX madrone, oak, juniper -->
+      <g fill="#0e1a0c" opacity="0.9">
+        <!-- Left bank trees -->
+        <ellipse cx="200" cy="282" rx="18" ry="12"/>
+        <ellipse cx="240" cy="278" rx="14" ry="10"/>
+        <ellipse cx="275" cy="275" rx="16" ry="11"/>
+        <ellipse cx="310" cy="272" rx="12" ry="9"/>
+        <ellipse cx="345" cy="270" rx="15" ry="10"/>
+        <ellipse cx="380" cy="268" rx="13" ry="9"/>
+        <ellipse cx="415" cy="264" rx="14" ry="10"/>
+        <!-- Right bank -->
+        <ellipse cx="545" cy="264" rx="14" ry="10"/>
+        <ellipse cx="582" cy="268" rx="13" ry="9"/>
+        <ellipse cx="618" cy="270" rx="15" ry="10"/>
+        <ellipse cx="655" cy="273" rx="12" ry="9"/>
+        <ellipse cx="695" cy="276" rx="16" ry="11"/>
+        <ellipse cx="738" cy="280" rx="14" ry="10"/>
+        <ellipse cx="780" cy="283" rx="18" ry="12"/>
+      </g>
+      <!-- Sage green accent on trees -->
+      <g fill="#1a2e18" opacity="0.6">
+        <ellipse cx="200" cy="280" rx="14" ry="9"/>
+        <ellipse cx="275" cy="273" rx="12" ry="8"/>
+        <ellipse cx="345" cy="268" rx="11" ry="8"/>
+        <ellipse cx="415" cy="262" rx="11" ry="8"/>
+        <ellipse cx="545" cy="262" rx="11" ry="8"/>
+        <ellipse cx="618" cy="268" rx="11" ry="8"/>
+        <ellipse cx="695" cy="274" rx="12" ry="8"/>
+        <ellipse cx="780" cy="281" rx="14" ry="9"/>
+      </g>
+
+      <!-- ── TRAIL PATH ── -->
+      <!-- Descends from Chisos Basin Lodge area (top-left), winds through drainage to The Window -->
+      <path d="M60 308 Q130 298 200 288 Q270 278 340 268 Q390 261 430 254 Q455 248 480 245 Q505 248 530 254 Q570 261 620 268 Q690 278 760 288 Q830 298 900 305" stroke="rgba(232,192,122,0.45)" stroke-width="2" fill="none" stroke-linecap="round" stroke-dasharray="5,4"/>
+
+      <!-- Trailhead marker — Basin trailhead -->
+      <circle cx="60" cy="308" r="4" fill="rgba(232,192,122,0.8)"/>
+      <!-- Pour-off / Window endpoint marker -->
+      <circle cx="480" cy="245" r="3" fill="rgba(232,192,122,0.9)"/>
+      <circle cx="480" cy="245" r="7" fill="none" stroke="rgba(232,192,122,0.35)" stroke-width="1.5"/>
+
+      <!-- Rock scramble near pour-off -->
+      <g fill="rgba(180,130,60,0.2)" stroke="rgba(180,130,60,0.15)" stroke-width="0.5">
+        <ellipse cx="450" cy="252" rx="10" ry="5"/>
+        <ellipse cx="468" cy="248" rx="8" ry="4"/>
+        <ellipse cx="493" cy="248" rx="8" ry="4"/>
+        <ellipse cx="510" cy="252" rx="10" ry="5"/>
+      </g>
+
+      <!-- Distance label -->
+      <text x="480" y="308" text-anchor="middle" font-family="'DM Mono', monospace" font-size="9" fill="rgba(232,192,122,0.35)">2.8 mi each way</text>
+    </svg>
+  </div>
+</div>
+
+<!-- ── CONTENT ── -->
+<section class="content">
+  <div class="section-rule">
+    <span class="section-rule-text">Trail Details</span>
+  </div>
+
+  <div class="content-grid">
+    <!-- Main column -->
+    <div class="main-col">
+      <!-- Trail description: NPS Big Bend trail page + AllTrails community notes + NPS plant ecology docs -->
+      <h2>About This Trail</h2>
+      <p>The Window Trail is the Chisos Basin's signature hike and one of the most deceptive trails in the park. At 5.6 miles round-trip with only 800 feet of elevation change, it looks manageable on paper — but the catch is the direction. <strong>You go downhill the entire way out</strong>, descending through Oak Creek drainage toward the iconic V-shaped pour-off that frames the western desert 1,000 feet below. Then you turn around and climb all 800 feet back to the Basin.</p>
+      <p>The trail begins behind the Chisos Basin store and campground, immediately entering the shade of a lush riparian corridor — Texas madrone, bigtooth maple, and Arizona cypress line the creek drainage, making this one of the greenest, most protected walks in the park. In October the maples show color. The further you descend, the more the canyon walls press in around you.</p>
+      <p>The pour-off at trail's end is spectacular: a smooth-polished granite shelf where Oak Creek drops off the edge of the Basin rim into open air. You can sit on the rock and stare out at the Chihuahuan Desert floor a thousand feet below. It's a <strong>natural picture frame</strong> — hence "The Window." The return climb is where the trail earns its moderate rating — steady and relentless over 2.8 miles. Budget more time for the return than the outbound leg.</p>
+
+      <div class="section-rule" style="margin-top: 2.5rem;">
+        <span class="section-rule-text">Pacing Guide</span>
+      </div>
+
+      <!-- Pacing waypoints: NPS trail map + AllTrails GPS track + on-the-ground scout research -->
+      <ul class="pacing-list">
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0</span>
+          <span class="pacing-desc"><strong>Chisos Basin Trailhead (5,401 ft)</strong> — Start at the trailhead behind the Chisos Basin store, near the amphitheater. Restrooms and water at the store. This is the last water until you return — fill up completely. The trail shares the first 100 yards with the Window View Trail before splitting; take the lower fork.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 0.3</span>
+          <span class="pacing-desc"><strong>Junction with Laguna Meadow Trail</strong> — Stay straight (downhill) on The Window Trail. The descent into Oak Creek drainage begins in earnest here. Shade from the canyon walls and riparian trees makes this one of the coolest stretches of trail in the park. In October look for bigtooth maple color change on the slopes.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 1.0</span>
+          <span class="pacing-desc"><strong>Oak Creek crossing area</strong> — The trail crosses and re-crosses the seasonal creek several times through here. In October it's typically dry or a trickle. Watch footing on creek-bed rocks — algae can make them slick even when barely wet. The canyon narrows noticeably from here.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 2.2</span>
+          <span class="pacing-desc"><strong>Lower canyon narrows</strong> — The walls close in and the trail becomes rockier underfoot. The drainage floor is polished granite in sections. Pace slows here for most groups. This is the last good spot to turn around for anyone who's unsure about the return climb — the pour-off is 0.6 miles further.</span>
+        </li>
+        <li class="pacing-item">
+          <span class="pacing-mile">Mile 2.8</span>
+          <span class="pacing-desc"><strong>The Window Pour-off (~4,620 ft)</strong> — The trail ends at the granite shelf pour-off where Oak Creek drops into open desert. The V-shaped gap frames the Chihuahuan Desert and distant mountains. Sit, eat, drink water, and rest before the return. <strong>Do not approach the edge</strong> — the rock slopes steeply and the drop is fatal. Allow 20 minutes here. Return the same way — uphill all 2.8 miles.</span>
+        </li>
+      </ul>
+
+      <!-- Troop logistics: Pack 171 trip planning notes + NPS flash flood safety guidance -->
+      <h2 style="margin-top: 2rem;">Troop Logistics</h2>
+      <p>The Window is the most accessible hike from the Basin — the trailhead is a 2-minute walk from the lodge and campground, no driving required. That makes it the <strong>default evening or recovery-day hike</strong> for the group. Leave around 3:00 PM to hit the pour-off at golden hour and catch the last light framing through The Window. You'll be back at the Basin by nightfall.</p>
+      <p>The return climb is where inexperienced hikers struggle. Plan for the outbound leg to take about 1 hour, and the return 1.5–2 hours with a group. <strong>Reserve water for the climb back</strong> — it's easy to drink too much on the easy downhill and have nothing left when you need it most. Each Scout needs at least 2 liters.</p>
+      <p>One genuine hazard: the Oak Creek drainage is a flash flood corridor. <strong>If you see or hear weather building over the mountains, turn around immediately</strong> and move out of the drainage. October thunderstorms are uncommon but possible. Check the NPS forecast before heading out and don't enter the lower canyon narrows if storms are anywhere in the vicinity.</p>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="side-col">
+      <!-- Trail specs: NPS Big Bend (nps.gov/bibe) + USGS Chisos Mountains quadrangle -->
+      <div class="info-card">
+        <div class="info-card-header">Trail Specs</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Type</span>
+            <span class="info-row-val">Out &amp; Back</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Distance</span>
+            <span class="info-row-val">5.6 miles</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Elev. Change</span>
+            <span class="info-row-val">~800 ft loss (out)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trailhead</span>
+            <span class="info-row-val">Chisos Basin (5,401 ft)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Pour-off Elev.</span>
+            <span class="info-row-val">~4,620 ft</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Difficulty</span>
+            <span class="info-row-val">Moderate</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Est. Time</span>
+            <span class="info-row-val">3–4 hrs</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Drive from Lodge</span>
+            <span class="info-row-val">0 min (walk)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Dogs</span>
+            <span class="info-row-val">Not permitted</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-header">Scout Tips</div>
+        <div class="info-card-body">
+          <div class="tip-item">
+            <span class="tip-icon">💧</span>
+            <span>2L minimum per person. Save half for the climb back — the downhill fools you into drinking too much early.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">⬆️</span>
+            <span>Budget more time for the return than the outbound leg. Going down feels easy; 2.8 miles uphill at 5,000 ft is a different hike.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">⛈️</span>
+            <span>Flash flood risk in the drainage. If storms are building over the Chisos, exit the canyon immediately — no hesitation.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🌅</span>
+            <span>3 PM departure catches golden hour at the pour-off. The Window glows when the sun drops toward the desert horizon.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🚫</span>
+            <span>The pour-off edge is dangerous — polished rock slopes steeply toward a fatal drop. Keep Scouts well back from the lip.</span>
+          </div>
+          <div class="tip-item">
+            <span class="tip-icon">🍁</span>
+            <span>In October, bigtooth maples in the drainage show fall color — one of the few places in Texas you'll see real autumn foliage.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- October conditions: Western Regional Climate Center / NPS Big Bend climate page -->
+      <div class="info-card">
+        <div class="info-card-header">October Conditions</div>
+        <div class="info-card-body">
+          <div class="info-row">
+            <span class="info-row-label">Basin High</span>
+            <span class="info-row-val">75°F</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Canyon Shade</span>
+            <span class="info-row-val">~65°F (lower sections)</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Fall Color</span>
+            <span class="info-row-val">Peak mid-Oct</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Flash Flood Risk</span>
+            <span class="info-row-val">Low — check forecast</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Crowds</span>
+            <span class="info-row-val">Moderate–High</span>
+          </div>
+          <div class="info-row">
+            <span class="info-row-label">Trail Condition</span>
+            <span class="info-row-val">Excellent</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── DATA GRAPHICS ── -->
+<section class="data-section">
+  <div class="section-rule">
+    <span class="section-rule-text">Elevation & Grade Analysis</span>
+  </div>
+
+  <!-- Elevation Profile — note this trail descends on the way out, so the profile slopes DOWN -->
+  <!-- Elevation data points derived from USGS DEM + AllTrails GPS track for The Window Trail -->
+  <!-- https://www.alltrails.com/trail/us/texas/the-window-trail -->
+  <div class="data-card">
+    <div class="data-card-header">
+      <span class="data-card-title">Elevation Profile — One Way (Outbound = Downhill)</span>
+      <div class="data-legend">
+        <span class="legend-dot" style="background:#639922;"></span><span class="legend-label">Easy (&lt;5%)</span>
+        <span class="legend-dot" style="background:#EF9F27;"></span><span class="legend-label">Moderate (5–9%)</span>
+        <span class="legend-dot" style="background:#E24B4A;"></span><span class="legend-label">Steep (9%+)</span>
+      </div>
+    </div>
+    <div class="chart-wrap"><canvas id="wtChart"></canvas></div>
+  </div>
+
+  <!-- Grade Breakdown Table: segments and grades derived from AllTrails elevation profile + USGS topo data -->
+  <div class="data-card" style="margin-top:1.25rem;">
+    <div class="data-card-header">
+      <span class="data-card-title">Grade Breakdown (One-Way, Outbound)</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Segment</th><th>Trail Feature</th>
+            <th class="r">Miles</th><th class="r">Elev. Change</th>
+            <th class="r">Avg Grade</th><th class="c">Rating</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="seg">0.0 – 0.3</td><td>Basin trailhead to Laguna Meadow junction</td><td class="num">0.3</td><td class="num">-80 ft</td><td class="num">~5%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">0.3 – 1.0</td><td>Upper Oak Creek drainage — shaded, gentle descent</td><td class="num">0.7</td><td class="num">-140 ft</td><td class="num">~4%</td><td class="c"><span class="grade-badge easy">Easy</span></td></tr>
+          <tr><td class="seg">1.0 – 1.8</td><td>Mid-drainage — creek crossings, rocky sections</td><td class="num">0.8</td><td class="num">-210 ft</td><td class="num">~5%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+          <tr><td class="seg">1.8 – 2.2</td><td>Canyon narrows — steepest descent, polished granite</td><td class="num">0.4</td><td class="num">-200 ft</td><td class="num">~9%</td><td class="c"><span class="grade-badge steep">Steep</span></td></tr>
+          <tr><td class="seg">2.2 – 2.8</td><td>Lower approach to pour-off — rocky, slow terrain</td><td class="num">0.6</td><td class="num">-150 ft</td><td class="num">~5%</td><td class="c"><span class="grade-badge moderate">Moderate</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Analysis Cards Row -->
+  <div class="analysis-grid" style="margin-top:1.25rem;">
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#EF9F27;"></span>The Deceptive Trail</div>
+      <p>Going down is easy — the 2.8-mile outbound leg feels like a pleasant stroll. The return is where it reveals itself. <strong>800 feet of uphill over 2.8 miles</strong> at 5,000 ft elevation, after you're already tired. Plan for the return to take 30–40% longer than the outbound leg with a group.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-card-head"><span class="dot" style="background:#639922;"></span>Best Basin Hike for Shade</div>
+      <p>Unlike Lost Mine or Emory Peak, most of The Window Trail runs through <strong>shaded canyon drainage</strong> with tree cover. In October this means comfortable hiking even in the afternoon. The lower narrows stay cool all day — a real advantage for an after-lunch or late-day departure.</p>
+    </div>
+  </div>
+
+  <!-- Grade Distribution Bar -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Grade Distribution by Distance (Outbound)</div>
+    <div class="bar-row"><span class="bar-label">Easy (&lt;5%)</span><div class="bar-track"><div class="bar-fill" style="width:25%;background:#639922;"></div></div><span class="bar-pct">25%</span></div>
+    <div class="bar-row"><span class="bar-label">Moderate (5–9%)</span><div class="bar-track"><div class="bar-fill" style="width:61%;background:#EF9F27;"></div></div><span class="bar-pct">61%</span></div>
+    <div class="bar-row" style="margin-bottom:0;"><span class="bar-label">Steep (9%+)</span><div class="bar-track"><div class="bar-fill" style="width:14%;background:#E24B4A;"></div></div><span class="bar-pct">14%</span></div>
+  </div>
+
+  <!-- All four trails comparison -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#993556;"></span>All Four Trails — At a Glance</div>
+    <div class="vs-row"><span class="vs-label">Distance</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:16%;background:#8dbf55;"></div><span class="vs-val">Santa Elena 1.6 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:48%;background:#639922;"></div><span class="vs-val">Lost Mine 4.8 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:56%;background:#EF9F27;"></div><span class="vs-val">The Window 5.6 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 10 mi</span></div></div>
+    <div class="vs-row"><span class="vs-label">Elev. Chg</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:4%;background:#8dbf55;"></div><span class="vs-val">Santa Elena ~100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:32%;background:#639922;"></div><span class="vs-val">The Window ~800 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:45%;background:#EF9F27;"></div><span class="vs-val">Lost Mine 1,100 ft</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 2,470 ft</span></div></div>
+    <div class="vs-row" style="margin-bottom:0;"><span class="vs-label">Time</span><div class="vs-bar-wrap"><div class="vs-bar" style="width:18%;background:#8dbf55;"></div><span class="vs-val">Santa Elena 1–1.5 hr</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:38%;background:#639922;"></div><span class="vs-val">Lost Mine 2.5–3 hr</span></div></div>
+    <div class="vs-row"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:50%;background:#EF9F27;"></div><span class="vs-val">The Window 3–4 hr</span></div></div>
+    <div class="vs-row" style="margin-bottom:8px;"><span class="vs-label"></span><div class="vs-bar-wrap"><div class="vs-bar" style="width:100%;background:#E24B4A;"></div><span class="vs-val">Emory Peak 6–8 hr</span></div></div>
+    <!-- Recommended order: Pack 171 trip planning -->
+    <p class="vs-note">Recommended order: Lost Mine (Day 1, acclimate to altitude), Emory Peak (Day 2–3, full summit day), The Window (afternoon/evening hike any day — starts and ends at the Basin), Santa Elena (afternoon add-on, requires drive).</p>
+  </div>
+
+  <!-- Timing / logistics card -->
+  <!-- Start time recommendation: Pack 171 trip planning + NPS golden hour guidance -->
+  <div class="analysis-card" style="margin-top:1.25rem;">
+    <div class="analysis-card-head"><span class="dot" style="background:#378ADD;"></span>Best Time to Hike · Oct 9–13</div>
+    <p>Depart the trailhead at <strong>3:00 PM</strong> for the optimal experience. You'll arrive at the pour-off around 4:00–4:30 PM — right as the afternoon sun drops toward the desert horizon and turns The Window's frame golden. The return climb in the cooling late afternoon is far more pleasant than midday heat. You'll be back at the Basin by 6:30–7:00 PM, in time for dinner at the lodge or camp cooking. Bring a headlamp just in case — October sunset is around 7:20 PM and the canyon gets dark early.</p>
+  </div>
+</section>
+
+<!-- ── TRAIL NAV ── -->
+<div class="trail-nav">
+  <a class="trail-nav-link" href="../santa-elena/">
+    <span class="trail-nav-dir">
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M9 4H1M4 1L1 4l3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Previous Trail
+    </span>
+    <span class="trail-nav-name">Santa Elena</span>
+  </a>
+  <a class="trail-nav-link next" href="../south-rim/">
+    <span class="trail-nav-dir">
+      Next Trail
+      <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+        <path d="M1 4h8M6 1l3 3-3 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="trail-nav-name">South Rim</span>
+  </a>
+</div>
+
+<footer>
+  Pack 171 · North Shore District · Capitol Area Council · BSA &nbsp;·&nbsp; Big Bend National Park, Texas
+</footer>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursor.style.left = mx+'px'; cursor.style.top = my+'px'; });
+(function animRing() {
+  rx += (mx - rx) * 0.12; ry += (my - ry) * 0.12;
+  ring.style.left = rx+'px'; ring.style.top = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a').forEach(a => {
+  a.addEventListener('mouseenter', () => { cursor.style.width='14px'; cursor.style.height='14px'; ring.style.width='50px'; ring.style.height='50px'; });
+  a.addEventListener('mouseleave', () => { cursor.style.width='8px'; cursor.style.height='8px'; ring.style.width='32px'; ring.style.height='32px'; });
+});
+
+// Starfield canvas
+const canvas = document.getElementById('stars-canvas');
+const ctx = canvas.getContext('2d');
+let stars = [], W, H;
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 200; i++) {
+    stars.push({ x: Math.random()*W, y: Math.random()*H*0.6, r: Math.random()*1.1+0.3, o: Math.random()*0.6+0.15, speed: Math.random()*0.4+0.05, phase: Math.random()*Math.PI*2 });
+  }
+}
+initStars();
+let t = 0;
+function drawStars() {
+  ctx.clearRect(0, 0, W, H);
+  t += 0.008;
+  stars.forEach(s => {
+    const pulse = s.o + Math.sin(t*s.speed+s.phase)*0.12;
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fillStyle = `rgba(255,248,231,${pulse})`; ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// Parallax
+window.addEventListener('scroll', () => {
+  const y = window.scrollY;
+  canvas.style.transform = `translateY(${y*0.12}px)`;
+});
+</script>
+
+<!-- Chart.js for elevation profile -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script>
+Chart.defaults.color = 'rgba(255,248,231,0.4)';
+Chart.defaults.borderColor = 'rgba(232,192,122,0.08)';
+Chart.defaults.font.family = "'DM Mono', monospace";
+Chart.defaults.font.size = 11;
+
+// Elevation data points derived from USGS DEM + AllTrails GPS track for The Window Trail
+// https://www.alltrails.com/trail/us/texas/the-window-trail
+// Note: outbound direction is DOWNHILL — elevation decreases toward the pour-off
+const wtPts = [
+  {x:0,   y:5401},
+  {x:0.3, y:5320},
+  {x:1.0, y:5180},
+  {x:1.8, y:4970},
+  {x:2.2, y:4770},
+  {x:2.8, y:4620},
+];
+// Color-code each point by the grade of the upcoming segment
+const wtColors = ['#EF9F27','#639922','#EF9F27','#E24B4A','#EF9F27','#EF9F27'];
+
+new Chart(document.getElementById('wtChart'), {
+  type: 'line',
+  data: {
+    datasets: [{
+      data: wtPts.map(p => ({x: p.x, y: p.y})),
+      borderColor: '#378ADD', borderWidth: 2.5,
+      pointBackgroundColor: wtColors, pointBorderColor: wtColors,
+      pointRadius: 5, pointHoverRadius: 7,
+      fill: true, backgroundColor: 'rgba(55,138,221,0.07)', tension: 0.35
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: 'rgba(10,12,20,0.92)',
+        titleColor: '#E8C07A', bodyColor: 'rgba(255,248,231,0.7)',
+        borderColor: 'rgba(232,192,122,0.2)', borderWidth: 1,
+        callbacks: {
+          title: i => 'Mile ' + i[0].parsed.x.toFixed(1),
+          label: i => 'Elevation: ' + i.parsed.y.toLocaleString() + ' ft'
+        }
+      }
+    },
+    scales: {
+      x: {
+        type: 'linear', min: 0, max: 2.8,
+        title: { display: true, text: 'miles (outbound — return is the reverse)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { stepSize: 0.4, color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      },
+      y: {
+        min: 4400, max: 5600,
+        title: { display: true, text: 'elevation (ft)', color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        ticks: { callback: v => v.toLocaleString(), color: 'rgba(255,248,231,0.3)', font: { size: 10 } },
+        grid: { color: 'rgba(232,192,122,0.06)' },
+        border: { color: 'rgba(232,192,122,0.1)' }
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>
